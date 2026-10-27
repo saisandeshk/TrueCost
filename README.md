@@ -92,6 +92,10 @@ truecost --db ~/.truecost/quickstart.db report qs-cheap --baseline qs-strong
 truecost console --ledger ~/.truecost/quickstart.db
 ```
 
+In our run each agent took under three minutes. Ultra totalled 19 of 20 invoices exactly and Lightning 20 of 20, at
+×0.11 the cost per verified task: on work this simple the cheaper model is a real saving. The crash-test is how you
+find the work where it is not.
+
 **Your own agent:** set its base URL to `http://127.0.0.1:30020/v1` (OpenAI chat or Responses) or
 `http://127.0.0.1:30020` (Anthropic Messages), send `X-TrueCost-Task: <task id>` with each call, and record each
 task's result with `truecost outcome <run> <task> verified|failed`. Any OpenAI-compatible upstream works: copy

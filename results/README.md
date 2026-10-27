@@ -17,8 +17,8 @@ On retail customer service the cheap model (Qwen3.5-9B) verifies almost as many 
 (Qwen3.8-27B): the savings that route to it are real, and NVIDIA Switchyard's stage router finds that saving on its
 own. On finance back-office work the cheap model verifies 1 task in 100 against the strong model's 26, and every
 router that leans on it loses 13–25 points and costs more per finished task. The governor is the only control that
-held quality on both. Its gate trusts the cheap model on 10% of finance steps at α = 10% (22% at α = 20%), where
-the cheap model matches the strong one on only 6% of steps: it declines to save where saving is unsafe.
+held quality on both. On finance its gate keeps the cheap draft for 10% of the steps it judges at α = 10% (22% at α = 20%),
+where the cheap model matches the strong one on only 6% of steps: it declines to save where saving is unsafe.
 
 ## 2. What each saving really buys (retail, 8 seeds)
 
