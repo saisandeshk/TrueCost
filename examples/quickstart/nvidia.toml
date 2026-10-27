@@ -1,0 +1,18 @@
+# TrueCost in front of NVIDIA's hosted API catalog (build.nvidia.com). Two tiers of NVIDIA Nemotron; the agent picks
+# one by asking for model "strong" or "cheap". The key comes from the environment, never from this file:
+#   export NVIDIA_API_KEY=nvapi-...
+#   truecost serve --config examples/quickstart/nvidia.toml --port 30020
+db = "~/.truecost/quickstart.db"
+default_tier = "strong"
+nvml = false   # a hosted API: no local GPU to meter, so energy and GPU bill stay empty
+
+[upstreams.strong]
+base_url = "https://integrate.api.nvidia.com/v1"
+model = "nvidia/nemotron-3-ultra-550b-a55b"
+api_key = "env:NVIDIA_API_KEY"
+
+[upstreams.cheap]
+base_url = "https://integrate.api.nvidia.com/v1"
+model = "nvidia/nemotron-3.5-lightning-30b-a3b"
+price = "nvidia/nemotron-3.5-lightning"   # the catalog's id differs from the price list's
+api_key = "env:NVIDIA_API_KEY"

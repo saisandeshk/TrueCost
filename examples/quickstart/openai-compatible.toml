@@ -1,0 +1,18 @@
+# TrueCost in front of any OpenAI-compatible API (OpenAI, OpenRouter, OpenCode, a vLLM or NIM server, ...).
+# Fill in the base URL and model ids; `price` names the entry in truecost/data/prices.json to price a model by
+# (leave it out when the model id is already listed there; unpriced models show tokens but no $).
+#   export UPSTREAM_API_KEY=...
+#   truecost serve --config examples/quickstart/openai-compatible.toml --port 30020
+db = "~/.truecost/quickstart.db"
+default_tier = "strong"
+nvml = false   # set true when the models run on this machine's NVIDIA GPUs: adds measured energy and GPU time
+
+[upstreams.strong]
+base_url = "https://api.example.com/v1"
+model = "your-strong-model"
+api_key = "env:UPSTREAM_API_KEY"
+
+[upstreams.cheap]
+base_url = "https://api.example.com/v1"
+model = "your-cheap-model"
+api_key = "env:UPSTREAM_API_KEY"
