@@ -1,0 +1,20 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "nemo-agent-toolkit-truecost"
+version = "0.1.0"
+description = "TrueCost ledger cost, GPU energy, and policy metrics for NeMo Agent Toolkit"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+dependencies = ["nvidia-nat[eval,profiler]==1.9.0", "truecost>=0.1.0", "langchain-core>=1,<2"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.entry-points."nat.plugins"]
+nat_truecost = "nat_truecost.register"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/nat_truecost"]

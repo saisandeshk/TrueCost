@@ -1,0 +1,11 @@
+INVOICE
+Vendor: Nordic Freight AB
+Vendor ID: V-2290
+Invoice number: INV-2042
+Date: 2026-10-20
+PO: PO-88415
+
+  Road freight Gothenburg -> Hamburg, 6 pallets ... 3,980.00
+
+Total due: 3980.00 EUR
+Payment terms: 14 days

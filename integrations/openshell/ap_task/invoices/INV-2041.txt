@@ -1,0 +1,12 @@
+INVOICE
+Vendor: Acme Office Supplies GmbH
+Vendor ID: V-1107
+Invoice number: INV-2041
+Date: 2026-10-19
+PO: PO-88412
+
+  40 x A4 copy paper, 5-ream box ........ 1,040.00
+  12 x toner cartridge, black ............ 200.50
+
+Total due: 1240.50 EUR
+Payment terms: 30 days

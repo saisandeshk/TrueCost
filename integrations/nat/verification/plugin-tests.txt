@@ -1,0 +1,9 @@
+..............................                                           [100%]
+=============================== warnings summary ===============================
+integrations/nat/.venv/lib/python3.12/site-packages/nat/authentication/credential_validator/bearer_token_validator.py:25
+  ./integrations/nat/.venv/lib/python3.12/site-packages/nat/authentication/credential_validator/bearer_token_validator.py:25: AuthlibDeprecationWarning: authlib.jose module is deprecated, please use joserfc instead.
+  It will be compatible before version 2.0.0.
+    from authlib.jose import JsonWebKey
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+30 passed, 1 warning in 1.57s

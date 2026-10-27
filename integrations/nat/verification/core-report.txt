@@ -1,0 +1,18 @@
+| metric | retail-downgrade-s303 |
+|---|---|
+| tasks | 114 |
+| verified | 64 |
+| success_rate | 0.5614 |
+| db_match_rate | 0.5965 |
+| partial_credit | None |
+| violations_per_100 | 3.5088 |
+| usd_per_verified | 0.0085 |
+| usd_per_task | 0.0048 |
+| tokens_per_task | 106,552 |
+| energy_wh_per_verified | 0.7534 |
+| wasted_cost_share | 0.4637 |
+| tail_cost_p95_over_median | 2.1162 |
+| cheap_call_share | 1.0000 |
+| unmatched_calls | 0 |
+
+retail-downgrade-s303 vs retail-baseline-s303 on 114 paired tasks: success 56.1% -> 56.1% (+0.0 pp, lost 17 / gained 17, p = 1.000); $ per verified x0.34 [0.28, 0.41]; energy per verified x0.60 [0.48, 0.73]; tokens per task x1.31

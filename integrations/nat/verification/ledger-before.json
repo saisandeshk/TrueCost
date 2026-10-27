@@ -1,0 +1,14 @@
+{
+  "results.db-wal": {
+    "size": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "results.db": {
+    "size": 170385408,
+    "sha256": "f9e9528bcacfa42a3aa57508c391cb3ef2e42df17052d8fa829e49cb172d0317"
+  },
+  "results.db-shm": {
+    "size": 32768,
+    "sha256": "fd4c9fda9cd3f9ae7c962b0ddf37232294d55580e1aa165aa06129b8549389eb"
+  }
+}

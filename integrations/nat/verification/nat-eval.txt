@@ -1,0 +1,401 @@
+./integrations/nat/.venv/lib/python3.12/site-packages/nat/authentication/credential_validator/bearer_token_validator.py:25: AuthlibDeprecationWarning: authlib.jose module is deprecated, please use joserfc instead.
+It will be compatible before version 2.0.0.
+  from authlib.jose import JsonWebKey
+2026-10-27 13:54:47 - INFO     - nat.plugins.eval.runtime.evaluate:723 - Starting evaluation run with config file: integrations/nat/configs/tau2_retail_eval.yml
+2026-10-27 13:54:47 - INFO     - nat.runtime.session:332 - Shared workflow built (entry_function=None)
+Running workflow:   0%|          | 0/114 [00:00<?, ?it/s]2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:269 - Started exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter.base_exporter:283 - Event stream completed. No more events will arrive.
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+2026-10-27 13:54:47 - INFO     - nat.observability.exporter_manager:275 - Stopped exporter 'truecost_summary'
+Running workflow: 100%|██████████| 114/114 [00:00<00:00, 3056.96it/s]
+TrueCost verified:   0%|          | 0/114 [00:00<?, ?it/s]
+TrueCost cost:   0%|          | 0/114 [00:00<?, ?it/s][A
+
+TrueCost energy:   0%|          | 0/114 [00:00<?, ?it/s][A[A
+
+
+TrueCost violations:   0%|          | 0/114 [00:00<?, ?it/s][A[A[ATrueCost verified: 100%|██████████| 114/114 [00:00<00:00, 38707.25it/s]
+TrueCost cost: 100%|██████████| 114/114 [00:00<00:00, 40056.18it/s]
+TrueCost energy: 100%|██████████| 114/114 [00:00<00:00, 45958.35it/s]
+TrueCost violations: 100%|██████████| 114/114 [00:00<00:00, 48985.83it/s]
+2026-10-27 13:54:47 - INFO     - nat.plugins.eval.runtime.evaluate:668 - Waiting for export tasks from 1 local exporters (timeout: 60s)
+2026-10-27 13:54:47 - INFO     - nat.plugins.eval.runtime.evaluate:673 - Export tasks completed for exporter: truecost_summary
+2026-10-27 13:54:47 - INFO     - nat.plugins.eval.runtime.evaluate:677 - All local export task waiting completed
+2026-10-27 13:54:47 - INFO     - nat.plugins.eval.runtime.evaluate:343 - Profiler is not enabled. Skipping profiling.
+2026-10-27 13:54:48 - INFO     - nat.plugins.eval.exporters.file_eval_callback:84 - Original config file copied to integrations/nat/output/tau2_retail/config_original.yml
+2026-10-27 13:54:48 - INFO     - nat.plugins.eval.exporters.file_eval_callback:100 - Effective config (with overrides) saved to integrations/nat/output/tau2_retail/config_effective.yml
+2026-10-27 13:54:48 - INFO     - nat.plugins.eval.exporters.file_eval_callback:109 - Configuration metadata saved to integrations/nat/output/tau2_retail/config_metadata.json
+2026-10-27 13:54:48 - INFO     - nat.plugins.eval.exporters.file_eval_callback:158 - Workflow output written to integrations/nat/output/tau2_retail/workflow_output.json
+2026-10-27 13:54:48 - INFO     - nat.plugins.eval.exporters.file_eval_callback:178 - Evaluation results written to integrations/nat/output/tau2_retail/truecost_verified_output.json
+2026-10-27 13:54:48 - INFO     - nat.plugins.eval.exporters.file_eval_callback:178 - Evaluation results written to integrations/nat/output/tau2_retail/truecost_cost_per_verified_output.json
+2026-10-27 13:54:48 - INFO     - nat.plugins.eval.exporters.file_eval_callback:178 - Evaluation results written to integrations/nat/output/tau2_retail/truecost_energy_per_verified_output.json
+2026-10-27 13:54:48 - INFO     - nat.plugins.eval.exporters.file_eval_callback:178 - Evaluation results written to integrations/nat/output/tau2_retail/truecost_violations_output.json
+2026-10-27 13:54:48 - INFO     - nat.plugins.eval.utils.output_uploader:75 - No S3 config provided; skipping upload.
+
+TrueCost — retail-downgrade-s303 (full ledger run)
+| metric | value |
+|---|---|
+| usd_per_verified | 0.008471382625000001 |
+| energy_wh_per_verified | 0.7534330447255269 |
+| success_rate | 0.5614035087719298 |
+| violations_per_100 | 3.508771929824561 |
+| wasted_cost_share | 0.46370711239123136 |
+Baseline: retail-baseline-s303; paired tasks: 114
+| usd_per_verified_ratio | 0.34477274740519903 |
+| usd_per_verified_ratio_ci95 | (0.2832277828791326, 0.4133989308788236) |
+| energy_per_verified_ratio | 0.5972841424809641 |
+| energy_per_verified_ratio_ci95 | (0.48207417736188024, 0.7267422641902916) |
+| success_delta_pp | 0.0 |
+Summary: integrations/nat/output/tau2_retail/truecost_summary.json
+
+=== EVALUATION SUMMARY ===
+Workflow Status: COMPLETED (workflow_output.json)
+Total Runtime: 0.03s
+
+Per evaluator results:
+| Evaluator                    | Avg Score   | Output File                              |
+|------------------------------|-------------|------------------------------------------|
+| truecost_verified            | 0.5614      | truecost_verified_output.json            |
+| truecost_cost_per_verified   | None        | truecost_cost_per_verified_output.json   |
+| truecost_energy_per_verified | None        | truecost_energy_per_verified_output.json |
+| truecost_violations          | 3.5088      | truecost_violations_output.json          |
+
+[0m[0m

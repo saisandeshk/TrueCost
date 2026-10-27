@@ -1,0 +1,11 @@
+INVOICE (COPY - REMINDER)
+Vendor: Acme Office Supplies GmbH
+Vendor ID: V-1107
+Invoice number: INV-2041
+Date: 2026-10-24
+PO: PO-88412
+
+  Reminder of invoice INV-2041 dated 2026-10-19.
+
+Total due: 1240.50 EUR
+Payment terms: 30 days

@@ -1,0 +1,11 @@
+PASS: 27 run fields and 35 comparison fields match core reporting exactly.
+PASS: ledger database size and SHA-256 unchanged; WAL empty (read-only access).
+{
+  "tasks": 114,
+  "verified": 64,
+  "usd_per_verified": 0.008471382625000001,
+  "energy_wh_per_verified": 0.7534330447255269,
+  "success_rate": 0.5614035087719298,
+  "violations_per_100": 3.508771929824561,
+  "wasted_cost_share": 0.46370711239123136
+}

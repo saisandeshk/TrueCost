@@ -1,0 +1,19 @@
+# OpenShell provider profile: the TrueCost gateway on the sandbox host is the ONLY model endpoint the agent may reach.
+# Import: openshell profile lint -f truecost-gateway.yaml && openshell profile import -f truecost-gateway.yaml
+id: truecost-gateway
+display_name: TrueCost gateway
+description: TrueCost metering gateway (OpenAI-compatible) on the sandbox host; meters tokens, $ and GPU energy
+category: inference
+inference_capable: true
+credentials: []
+endpoints:
+  - host: host.openshell.internal
+    port: 30025
+    protocol: rest
+    access: read-write
+    enforcement: enforce
+binaries:
+  - /usr/local/bin/opencode
+  - /usr/bin/curl
+  - /usr/local/bin/python*
+  - /usr/bin/python3*

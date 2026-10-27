@@ -1,0 +1,37 @@
+# Offline evaluation of finished τ² outcomes. No LLM or gateway calls.
+general:
+  telemetry:
+    tracing:
+      truecost_summary:
+        _type: truecost_summary
+        ledger: &ledger ~/.truecost/results.db   # `truecost demo --download-only` fetches it
+        run_id: &run retail-downgrade-s303
+        baseline_run_id: retail-baseline-s303
+
+workflow:
+  _type: truecost_replay
+  ledger: *ledger
+  run_id: *run
+
+eval:
+  general:
+    max_concurrency: 4
+    dataset:
+      _type: truecost_ledger_run
+      ledger: *ledger
+      run_id: *run
+      # Feed the unique task key to replay; the original question stays in full_dataset_entry.
+      structure:
+        question_key: id
+    output:
+      dir: integrations/nat/output/tau2_retail
+      cleanup: false
+  evaluators:
+    truecost_verified:
+      _type: truecost_verified
+    truecost_cost_per_verified:
+      _type: truecost_cost_per_verified
+    truecost_energy_per_verified:
+      _type: truecost_energy_per_verified
+    truecost_violations:
+      _type: truecost_violations

@@ -1,0 +1,89 @@
+{
+ "runs": [
+  {
+   "run": "retail-downgrade-s303",
+   "tasks": 114,
+   "verified": 64,
+   "success_rate": 0.5614035087719298,
+   "db_match_rate": 0.5964912280701754,
+   "partial_credit": null,
+   "violations_per_100": 3.508771929824561,
+   "usd_total": 0.5421684880000001,
+   "usd_per_task": 0.004755863929824562,
+   "usd_per_verified": 0.008471382625000001,
+   "tokens_per_task": 106551.77192982456,
+   "tokens_per_verified": 189795.34375,
+   "cache_share": 0.8892083551862375,
+   "energy_wh_per_task": 0.42297995493362905,
+   "energy_wh_per_verified": 0.7534330447255269,
+   "gpu_usd_per_verified": 0.009418362909289345,
+   "co2_g_per_verified": 0.547745823515458,
+   "wasted_cost_share": 0.46370711239123136,
+   "wasted_energy_share": 0.4635505482357209,
+   "tail_cost_p95_over_median": 2.1161787319170537,
+   "calls_per_task": 12.640350877192983,
+   "cheap_call_share": 1.0,
+   "unmatched_calls": 0,
+   "governor_overhead_cost_share": 0.0,
+   "governor_overhead_energy_share": 0.0,
+   "governor_actions": {},
+   "meter_j": {
+    "0": 208716.25099999993
+   }
+  }
+ ],
+ "comparisons": [
+  {
+   "base": "retail-baseline-s303",
+   "run": "retail-downgrade-s303",
+   "paired_tasks": 114,
+   "success_base": 0.5614035087719298,
+   "success_run": 0.5614035087719298,
+   "success_delta_pp": 0.0,
+   "success_delta_ci95": [
+    -9.649122807017545,
+    10.526315789473685
+   ],
+   "tasks": 114,
+   "runs": 1,
+   "lost": 17,
+   "gained": 17,
+   "mcnemar_p": 1.0,
+   "p_value": 1.0,
+   "violations_base_per_100": 6.140350877192983,
+   "violations_run_per_100": 3.508771929824561,
+   "violations_delta_per_100": -2.6315789473684217,
+   "usd_per_verified_ratio": 0.34477274740519903,
+   "usd_per_verified_ratio_ci95": [
+    0.2832277828791326,
+    0.4133989308788236
+   ],
+   "energy_per_verified_ratio": 0.5972841424809641,
+   "energy_per_verified_ratio_ci95": [
+    0.48207417736188024,
+    0.7267422641902916
+   ],
+   "tokens_per_verified_ratio": 1.3129428326437815,
+   "tokens_per_verified_ratio_ci95": [
+    1.0838971724974118,
+    1.5836310357370904
+   ],
+   "gpu_usd_per_verified_ratio": 0.5734992876821202,
+   "gpu_usd_per_verified_ratio_ci95": [
+    0.46336735031924214,
+    0.6980738156616367
+   ],
+   "tokens_per_task_ratio": 1.3129428326437815,
+   "usd_per_task_ratio": 0.3447727474051991,
+   "usd_per_verified_base": 0.0245709171875,
+   "usd_per_verified_run": 0.008471382625000001,
+   "wh_per_verified_base": 1.2614315216807206,
+   "wh_per_verified_run": 0.7534330447255269,
+   "gpu_usd_per_verified_base": 0.01642262355260285,
+   "gpu_usd_per_verified_run": 0.009418362909289345,
+   "co2_g_per_verified_base": 0.9170607162618838,
+   "co2_g_per_verified_run": 0.547745823515458,
+   "cheap_call_share_run": 1.0
+  }
+ ]
+}
