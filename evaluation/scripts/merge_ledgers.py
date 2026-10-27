@@ -8,7 +8,7 @@ import sqlite3
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # the repository root
 from truecost.ledger import Ledger  # noqa: E402
 
 TABLES = ("runs", "tasks", "calls", "energy", "limits")

@@ -202,6 +202,7 @@ const STACK = {
   "sy-stage": "NVIDIA NeMo Switchyard · stage router (tuned for coding agents)",
   "sy-escalation-j27": "NVIDIA NeMo Switchyard · escalation router, 27B as judge",
   "nemotron-think": "NVIDIA Nemotron-3-Nano-30B-A3B as shipped (reasoning on)",
+  "nemotron-think-nim": "NVIDIA Nemotron-3-Nano-30B-A3B as shipped, served by NVIDIA NIM",
   "gov-policy-a100": "TrueCost governor + policy check · gate off: 9B every step, writes pinned to the 27B and policy-checked",
 };
 const stackOf = (c) => STACK[c] || (/^gov-policy-a/.test(c) ? `TrueCost governor + policy check · risk budget α ${c.replace("gov-policy-a", "")}%`
@@ -220,10 +221,10 @@ async function crashtest() {
   const d = await api(`/api/crashtest?workload=${encodeURIComponent(wl)}`);
   NOISE = d.noise_floor;
   const fam = ["reliability", "safety", "security", "sustainability", "cost"];
-  const board = h("table", { class: "t" }, h("thead", {}, h("tr", {}, h("th", {}, "Trick"), fam.map((f) => h("th", {}, f[0].toUpperCase() + f.slice(1))),
+  const board = h("table", { class: "t board" }, h("thead", {}, h("tr", {}, h("th", {}, "Trick"), fam.map((f) => h("th", {}, f[0].toUpperCase() + f.slice(1))),
     h("th", { class: "n" }, "Verified"), h("th", { class: "n" }, "Δ vs baseline"), h("th", { class: "n", title: "share of tasks solved in all k runs" }, "pass^k"), h("th", { class: "n", title: "API-equivalent: tokens at public list prices" }, "$ / verified"), h("th", { class: "n", title: "What the GPU time cost: each call's share of the H100 (k calls in flight share it 1/k) × the hourly price Brev bills" }, "GPU bill / verified"), h("th", { class: "n" }, "Energy / verified"), h("th", { class: "n" }, "Violations / 100"))),
     h("tbody", {}, d.rows.map((r) => h("tr", { style: r.provisional ? "opacity:.55" : "" },
-      h("td", {}, r.condition, r.condition === d.baseline && r.condition !== "baseline" ? h("span", { class: "muted small" }, "  (baseline)") : null,
+      h("td", { class: "trick" }, r.condition, r.condition === d.baseline && r.condition !== "baseline" ? h("span", { class: "muted small" }, "  (baseline)") : null,
         stackOf(r.condition) ? h("div", { class: "muted small" }, stackOf(r.condition)) : null,
         r.provisional ? h("div", { class: "muted small" }, `provisional · ${r.compare.runs || 1} run${(r.compare.runs || 1) > 1 ? "s" : ""}`) : null),
       fam.map((f) => h("td", {}, stars(r.stars[f]))),
@@ -238,7 +239,7 @@ async function crashtest() {
   const dots = h("div"), batch = h("div");
   main.replaceChildren(picker,
     card("Crash-test ratings", `What each cost-saving trick breaks, against the ${d.baseline || "baseline"} on paired tasks · stars per protocol ${d.protocol} (thresholds fixed before the runs) · * beyond noise: 95% CI excludes 0 and the effect exceeds the noise floor`,
-      d.rows.length ? board : h("div", { class: "empty" }, d.error || "Runs pending."),
+      d.rows.length ? h("div", { class: "scroll" }, board) : h("div", { class: "empty" }, d.error || "Runs pending."),
       d.noise_floor ? h("p", { class: "note", style: "margin:12px 0 0" },
         `Noise floor: two runs of the unchanged baseline differ by ${d.noise_floor.mean_abs_delta_pp.toFixed(1)} pp on average `,
         `(up to ${d.noise_floor.max_abs_delta_pp.toFixed(1)} pp over ${d.noise_floor.pairs} pair(s)), so single-run comparisons of cost tricks can mislead.`) : null),
@@ -246,7 +247,7 @@ async function crashtest() {
     card("Why routing can raise energy", "Measured joules per model call on the strong tier's GPU, by how many calls it was batched with. Tricks that thin out a server's traffic pay this.", batch));
   api(`/api/batching?workload=${encodeURIComponent(wl)}&gpu=0`).then((rows) => groupedBars(batch, {
     rows: rows.map((r) => ({ label: `${r.in_flight} in flight`, values: { j: r.j_per_call } })),
-    series: [{ key: "j", label: "Joules per call", color: "--s1" }], fmt: (v) => `${v.toFixed(0)} J`,
+    series: [{ key: "j", label: "Joules per call", color: "--s1" }], fmt: (v) => `${v.toFixed(0)} J`, rowLabel: "Calls in flight",
   })).catch(() => {});
   dotPlot(dots, {
     rows: d.rows.filter((r) => r.condition !== d.baseline).map((r) => ({ label: r.condition, values: {
@@ -261,13 +262,17 @@ async function crashtest() {
   });
 }
 
+// The frozen gate each workload's governor ran with (evaluation/gates/); any other workload looks for <workload>.json.
+const GATE_OF = { "tau2-retail": "retail", "ab-finance": "ab-think" };
+const SWEEP = /^gov-a\d/;  // the governor alone at each α; the policy-check variants are plotted but not on the dial
+
 async function dial() {
   const [wl, picker] = await workloadPicker(dial);
   if (!wl) { main.replaceChildren(card("Risk dial", null, h("div", { class: "empty" }, "No runs yet."))); return; }
   const d = await api(`/api/crashtest?workload=${encodeURIComponent(wl)}&subset=gov`);
-  const gov = d.rows.filter((r) => /^gov/.test(r.condition)).map((r) => ({ ...r, alpha: +(r.condition.match(/a(\d+(?:\.\d+)?)/) || [0, NaN])[1] }))
-    .filter((r) => !isNaN(r.alpha)).sort((a, b) => a.alpha - b.alpha);
-  const sel = { i: Math.max(0, gov.findIndex((g) => g.alpha === 2)) };
+  const gov = d.rows.filter((r) => SWEEP.test(r.condition)).map((r) => ({ ...r, alpha: +r.condition.match(/^gov-a(\d+(?:\.\d+)?)/)[1] }))
+    .sort((a, b) => a.alpha - b.alpha);
+  const sel = { i: Math.max(0, gov.findIndex((g) => g.alpha === 10)) };
   const chart = h("div"), info = h("div", { class: "note" });
   const aLabel = h("div", { class: "a" }, gov.length ? `${gov[sel.i].alpha}%` : "–");
   const slider = gov.length > 1 ? h("input", { type: "range", min: 0, max: gov.length - 1, step: 1, value: sel.i,
@@ -277,13 +282,13 @@ async function dial() {
     if (g) aLabel.textContent = `${g.alpha}%`;
     scatter(chart, {
       points: d.rows.map((r) => {
-        const isGov = /^gov/.test(r.condition);
+        const isGov = SWEEP.test(r.condition);
         return { x: 100 * (r.compare.success_run ?? 0), y: r.compare.usd_per_verified_run ?? 0, label: r.condition,
-          group: r.condition === d.baseline ? "base" : isGov ? "gov" : "other",
+          group: r.condition === d.baseline ? "base" : isGov ? "gov" : /^gov/.test(r.condition) ? "policy" : "other",
           labelled: r.condition === d.baseline || !isGov, sel: g && r.condition === g.condition };
       }),
       groups: [{ key: "base", label: "Baseline (strong tier)", color: "--ink-2" }, { key: "gov", label: "TrueCost governor (α sweep)", color: "--s1" },
-        { key: "other", label: "Other cost-saving tricks", color: "--other" }],
+        { key: "policy", label: "Governor + policy check", color: "--s3" }, { key: "other", label: "Other cost-saving tricks", color: "--other" }],
       path: "gov", xlabel: "Verified success", ylabel: "$ per verified outcome", xfmt: (v) => `${v.toFixed(0)}%`, yfmt: usd,
     });
     info.replaceChildren(g ? h("div", {}, `At α = ${g.alpha}%: verified success ${pct(g.compare.success_run)} (${pp(g.compare.success_delta_pp)} vs baseline, `,
@@ -291,7 +296,7 @@ async function dial() {
       `${pct(g.compare.cheap_call_share_run)} of model calls on the cheap tier.`) :
       h("div", { class: "muted" }, "Governor runs pending: the dial appears once the α sweep has run."));
   };
-  const g = await api("/api/gate?name=retail").catch(() => ({ missing: true }));
+  const g = await api(`/api/gate?name=${encodeURIComponent(GATE_OF[wl] || wl)}`).catch(() => ({ missing: true }));
   const gateCard = g.missing ? card("Governor calibration", null, h("div", { class: "muted small" }, "No calibrated gate yet: it is fitted from the baseline's record-mode twins.")) :
     card("Governor calibration", `Gate: P(cheap draft matches the strong model's action), fitted on train-split tasks; thresholds by conformal risk control (task level). Updated ${when(g.updated)}.`,
       h("div", { class: "tiles" },
@@ -324,12 +329,15 @@ async function attacks() {
   const d = await api(`/api/attacks?workload=${encodeURIComponent(wl)}`);
   const chart = h("div");
   const conds = [...new Set(d.rows.map((r) => r.condition))];
-  const colors = ["--other", "--s2", "--s1"];
+  // the unprotected baseline in grey, the TrueCost governor in blue, every other condition its own colour
+  const others = ["--s2", "--s4", "--s3"];
+  let k = 0;
+  const colorOf = (c) => c === "baseline" ? "--other" : /^gov/.test(c) ? "--s1" : others[k++ % others.length];
   main.replaceChildren(picker, card("Attacks", "Cost amplification under attack (attacked $ per task ÷ clean), per condition. TrueCost's target is at most 1.5×.", chart));
   const attacksList = [...new Set(d.rows.map((r) => r.attack))];
   groupedBars(chart, {
     rows: attacksList.map((a) => ({ label: a, values: Object.fromEntries(d.rows.filter((r) => r.attack === a).map((r) => [r.condition, r.amplification])) })),
-    series: conds.map((c, i) => ({ key: c, label: c, color: colors[i % colors.length] })), fmt: (v) => `×${v.toFixed(2)}`, ref: 1.5, refLabel: "target 1.5×",
+    series: conds.map((c) => ({ key: c, label: c, color: colorOf(c) })), fmt: (v) => `×${v.toFixed(2)}`, ref: 1.5, refLabel: "target 1.5×",
     empty: "Attack runs pending.",
   });
 }

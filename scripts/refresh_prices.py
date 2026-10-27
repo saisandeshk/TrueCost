@@ -21,8 +21,9 @@ WANT = [
     "openai/gpt-5.6-sol", "openai/gpt-5.6-terra", "openai/gpt-5.6-luna",
 ]
 AA = "Artificial Analysis median provider price, 2026-10-20 (artificialanalysis.ai/models/{})"
-# Open models are priced from Artificial Analysis (median across providers), so tiers are priced on one
+# The Qwen tiers are priced from Artificial Analysis (median across providers), so tiers are priced on one
 # consistent basis; single-provider OpenRouter prices for them are uneven (e.g. a 27B input price below a 9B's).
+# Everything else, Nemotron included, keeps its OpenRouter price.
 # Cache hits: the Qwen API discounts cached input by 80% (shown on the Qwen3.8-27B page). Artificial Analysis lists
 # no cache price for the other Qwen tiers, so the same 80% discount is applied to all of them: otherwise a tier
 # with a listed discount looks cheaper per cached token than a smaller tier without one (an artefact, not a price).

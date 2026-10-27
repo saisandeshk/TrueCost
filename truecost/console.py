@@ -1,6 +1,6 @@
 """The web console: one page over the same ledger(s) the in-agent face reads.
 
-  truecost console --db ~/.truecost/ledger.db --db results/demo.db --port 8686
+  truecost console --ledger ~/.truecost/ledger.db --ledger ~/.truecost/results.db --port 8686
 
 Pages: Overview (the "usage page"), Live, Tasks + receipts, Crash-test ratings, Risk dial, Attacks.
 """
@@ -22,10 +22,9 @@ from fastapi.staticfiles import StaticFiles
 from . import pricing
 from .ledger import FAILED, UNVERIFIED, VERIFIED, Ledger
 from .ratings import FAMILIES, MIN_RUNS, PROTOCOL_VERSION, THRESHOLDS, rate
-from .report import AGENT_SIDE, compare_pooled, consistency, noise_floor, run_metrics
+from .report import AGENT_SIDE, GRID_G_CO2_PER_WH, compare_pooled, consistency, noise_floor, run_metrics
 
 WEB = Path(__file__).parent / "web"
-KG_CO2_PER_KWH = 0.71  # India grid emission factor (CEA CO2 baseline database, approx.); see docs
 RANGES = {"today": None, "24h": 86400, "7d": 7 * 86400, "30d": 30 * 86400, "all": None}
 SEED_RE = re.compile(r"-s(\d+)$")
 
@@ -105,12 +104,12 @@ class Console:
             "wasted_share": sum(r["usd"] for r in failed) / usd if usd else 0.0,
             "energy_wh": j / 3600.0 if j else None,
             "wh_per_verified": (j / 3600.0) / len(ver) if (j and ver) else None,
-            "co2_g_per_verified": (j / 3.6e6) * KG_CO2_PER_KWH * 1000 / len(ver) if (j and ver) else None,
+            "co2_g_per_verified": (j / 3600.0) * GRID_G_CO2_PER_WH / len(ver) if (j and ver) else None,
             "measured_tasks": len(measured),
             "violations": sum(r["violations"] or 0 for r in rows),
             "days": [{"day": d, **v} for d, v in sorted(days.items())][-30:],
             "by_source": by_source, "limits": self.limits(), "prices": pricing.snapshot_date(),
-            "co2_factor": KG_CO2_PER_KWH,
+            "co2_factor": GRID_G_CO2_PER_WH,
         }
 
     def limits(self) -> list[dict[str, Any]]:

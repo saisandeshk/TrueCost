@@ -123,7 +123,7 @@ install `.[gpu]` and set `gpu = <index>` per tier to add the GPU bill and measur
 </details>
 
 **In your coding agent.** `truecost init claude-code` previews the change; add `--write` to install a statusline
-such as `TrueCost │ ▸ fix billing test · $0.42 · tests ✓ │ today 5/7 ✓ · $0.31/✓ │ 5h 34% · wk 20%`, an end-of-turn
+such as `TrueCost │ ▸ fix billing test · $0.42 · tests ✓ │ today 5/7 ✓ · $0.31/✓ · 12% wasted │ 5h 34% · wk 20%`, an end-of-turn
 line and a `/truecost` receipt for the current task, and `--breaker` for a hook that stops a looping test run.
 `truecost init codex --write` installs an end-of-turn line (a Codex Stop hook) and `/prompts:truecost`. `✓` means the task's tests passed, `$/✓` is
 list-price dollars per verified task, and the plan meters are the agent's own usage readings. Subscription agents are
@@ -185,12 +185,12 @@ Full boards, attacks, the rater and the demonstration: [results/README.md](resul
 | `evaluation/` | The protocol, configs, grids, frozen gates and host scripts that reproduce every number |
 | `results/` | Figures and tables, redrawn from the [published results ledger](https://github.com/saisandeshk/TrueCost/releases/tag/v0.1.0) |
 | `examples/` | The hosted-API quickstart |
-| `tests/` | 54 tests (`uv pip install -e '.[dev]' && pytest`); the NAT plugin has 30 more |
+| `tests/` | 57 tests (`uv pip install -e '.[dev]' && pytest`); the NAT plugin has 30 more |
 
 ## Data and credits
 
-- **Prices:** Artificial Analysis median provider prices for open models ([artificialanalysis.ai](https://artificialanalysis.ai/))
-  and the OpenRouter public list otherwise; the snapshot is `truecost/data/prices.json`.
+- **Prices:** Artificial Analysis median provider prices for the Qwen tiers ([artificialanalysis.ai](https://artificialanalysis.ai/))
+  and the OpenRouter public list for every other model, Nemotron included; the snapshot is `truecost/data/prices.json`.
 - **Workloads:** [τ²-bench](https://github.com/sierra-research/tau2-bench) (Sierra),
   [AutomationBench](https://github.com/zapier/AutomationBench) (Zapier, MIT).
 - **Models and tools:** Qwen3.8-27B and Qwen3.5-9B (Qwen), NVIDIA Nemotron-3, NVIDIA NeMo Switchyard, NeMo Agent

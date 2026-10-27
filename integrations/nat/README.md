@@ -40,7 +40,8 @@ anchors and baseline to evaluate another finished run. The dataset, replay and s
 | `violations_per_100` | Recorded consequential policy violations per 100 graded tasks. |
 | `wasted_cost_share` | Share of recorded dollars spent on failed tasks (0 to 1). |
 
-Agent-side roles are exactly TrueCost's `agent`, `summariser`, and `governor`.
+Agent-side roles are TrueCost's `agent`, `summariser`, `governor` and `router` (a routing judge's own model
+calls), the same set `truecost report` counts.
 Customer simulation and grader calls are excluded. Unknown model prices produce
 null dollar totals; they are not free calls. The report's existing conventions
 are preserved, including dividing by `max(verified, 1)` when nothing is verified.

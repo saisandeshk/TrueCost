@@ -106,7 +106,7 @@ class Gateway:
                  transport: httpx.AsyncBaseTransport | None = None):
         self.cfg = cfg
         self.ledger = ledger or Ledger(cfg.db)
-        self.meter = meter if meter is not None else EnergyMeter(cfg.nvml_gpus)
+        self.meter = meter if meter is not None else EnergyMeter(cfg.nvml_gpus if cfg.nvml else [])
         self.savers = savers if savers is not None else build_savers(cfg.savers)
         if governor is None and cfg.governor:
             from pathlib import Path
@@ -285,6 +285,8 @@ class Gateway:
             for sv in self.savers:
                 if role in sv.roles:
                     await sv.after(ctx, ctx.reply)
+            if buffered:
+                return StreamingResponse(_as_sse(ctx.reply), media_type="text/event-stream")
             return JSONResponse(ctx.reply)
         if ctx.reply is not None:
             return await self._local_reply(ctx, body)
@@ -397,9 +399,7 @@ class Gateway:
         self.meter.begin(call_id, up.gpu)
         acc = {"usage": {}, "tools": [], "ttft": None, "finish": None}
         try:
-            upstream_req = self.client.build_request("POST", f"{up.base_url}/{path}", json=req,
-                                                     headers={"Authorization": f"Bearer {up.api_key}",
-                                                              "x-api-key": up.api_key, "anthropic-version": "2023-06-01"})
+            upstream_req = self.client.build_request("POST", f"{up.base_url}/{path}", json=req, headers=_api_headers(up))
             r = await self.client.send(upstream_req, stream=True)
         except httpx.HTTPError as e:
             energy = self.meter.end(call_id, up.gpu)
@@ -418,9 +418,6 @@ class Gateway:
                 self._spawn(self._finish_stream(r, call_id, t0, up, ctx, api, req, acc, 599,
                                                 f"interrupted: {type(e).__name__}", energy))
                 raise
-            finally:
-                if status != 599 or err is not None:
-                    pass
             try:
                 await r.aclose()
             except Exception:
@@ -527,6 +524,11 @@ class Gateway:
     async def aclose(self):
         await self.client.aclose()
         self.meter.stop()
+
+
+def _api_headers(up: Upstream) -> dict:
+    """Auth for the Responses and Anthropic Messages pass-through: both header styles, so either kind of server accepts it."""
+    return {"Authorization": f"Bearer {up.api_key}", "x-api-key": up.api_key, "anthropic-version": "2023-06-01"}
 
 
 _CTX_RE = re.compile(r"maximum context length of (\d+).*?(\d+) tokens from the input", re.S)
@@ -660,7 +662,8 @@ def create_app(cfg: Config, **kwargs) -> FastAPI:
     async def count_tokens(request: Request):
         body = await request.json()
         up = gw.cfg.upstreams[gw.cfg.tier_for(body.get("model"), "agent")]
-        r = await gw.client.post(f"{up.base_url}/messages/count_tokens", json={**body, "model": up.model})
+        r = await gw.client.post(f"{up.base_url}/messages/count_tokens", json={**body, "model": up.model},
+                                 headers=_api_headers(up))
         return Response(r.content, status_code=r.status_code, media_type="application/json")
 
     @app.get("/v1/models")

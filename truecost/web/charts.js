@@ -143,7 +143,9 @@ export function dotPlot(el, { rows, series, fmt = (v) => `${v > 0 ? "+" : ""}${v
   const wrap = h("div", { class: "chart" });
   el.append(legend(series, "dot"), wrap);
   if (!rows.length) { wrap.append(h("div", { class: "empty" }, "Runs pending.")); return; }
-  const W = widthOf(el), rowH = 34, L = 150, R = 250, T = 26;
+  const text = (r) => series.filter((sr) => r.values[sr.key] != null).map((sr) => `${sr.short || sr.label} ${fmt(r.values[sr.key])}`).join(" · ");
+  const R = Math.max(250, 24 + 7 * Math.max(...rows.map((r) => text(r).length)));  // room for the longest value label
+  const W = widthOf(el), rowH = 34, L = 150, T = 26;
   const H = T + rows.length * rowH + 24;
   const vals = rows.flatMap((r) => series.map((sr) => r.values[sr.key]).filter((v) => v != null));
   const m = niceMax(Math.max(10, ...vals.map(Math.abs)));
@@ -165,8 +167,7 @@ export function dotPlot(el, { rows, series, fmt = (v) => `${v > 0 ? "+" : ""}${v
     for (const [sr, v] of pts) {
       svg.append(s("circle", { cx: x(v), cy, r: 6, fill: css(sr.color), stroke: css("--surface"), "stroke-width": 2 }));
     }
-    if (pts.length) svg.append(s("text", { x: W - R + 16, y: cy + 4, class: "ink" },
-      pts.map(([sr, v]) => `${sr.short || sr.label} ${fmt(v)}`).join(" · ")));
+    if (pts.length) svg.append(s("text", { x: W - R + 16, y: cy + 4, class: "ink" }, text(r)));
     const hit = s("rect", { x: L, y: cy - rowH / 2, width: W - L - R, height: rowH, fill: "transparent", tabindex: 0 });
     hit.addEventListener("pointermove", (ev) => tip.show(ev, [h("div", {}, h("b", {}, r.label)),
       ...pts.map(([sr, v]) => h("div", {}, h("span", { class: "k", style: `background:${css(sr.color)}` }), `${sr.label}: ${fmt(v)}`))]));
@@ -196,7 +197,8 @@ export function scatter(el, { points, groups, path, xlabel, ylabel, xfmt, yfmt, 
     g.append(s("line", { x1: L, x2: W - R, y1: y(t), y2: y(t) }));
     svg.append(s("text", { x: L - 8, y: y(t) + 4, "text-anchor": "end" }, yfmt(t)));
   }
-  for (const t of ticks(x0, x1, 5)) svg.append(s("text", { x: x(t), y: H - B + 18, "text-anchor": "middle" }, xfmt(t)));
+  const xstep = [5, 10, 20, 25, 50].find((st) => (x1 - x0) / st <= 8) || 50;
+  for (let t = Math.ceil(x0 / xstep) * xstep; t <= x1; t += xstep) svg.append(s("text", { x: x(t), y: H - B + 18, "text-anchor": "middle" }, xfmt(t)));
   svg.prepend(g);
   svg.append(s("line", { class: "base", x1: L, x2: W - R, y1: y(0), y2: y(0) }));
   svg.append(s("text", { x: (L + W - R) / 2, y: H - 4, "text-anchor": "middle", class: "ink" }, xlabel));
@@ -209,10 +211,24 @@ export function scatter(el, { points, groups, path, xlabel, ylabel, xfmt, yfmt, 
       fill: "none", stroke: color[path], "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }));
   }
   const tip = tooltip(wrap);
+  const placed = [];  // a label takes the first slot near its point (right, then left) that no earlier label occupies
+  const labelAt = (px, py, label) => {
+    const w = 7 * label.length;
+    for (const dy of [-8, 18, -22, 32, -36]) {
+      for (const left of [false, true]) {
+        const b = { x: left ? px - 10 - w : px + 10, y: py + dy - 11, w, h: 14 };
+        if (!placed.some((o) => b.x < o.x + o.w && o.x < b.x + b.w && b.y < o.y + o.h && o.y < b.y + b.h)) {
+          placed.push(b);
+          return { x: left ? px - 10 : px + 10, y: py + dy, "text-anchor": left ? "end" : "start" };
+        }
+      }
+    }
+    return { x: px + 10, y: py - 8 };
+  };
   for (const p of points) {
     const c = s("circle", { cx: x(p.x), cy: y(p.y), r: p.sel ? 8 : 5, fill: color[p.group], stroke: css("--surface"), "stroke-width": 2 });
     svg.append(c);
-    if (p.labelled || p.sel) svg.append(s("text", { x: x(p.x) + 10, y: y(p.y) - 8, class: "ink" }, p.label));
+    if (p.labelled || p.sel) svg.append(s("text", { ...labelAt(x(p.x), y(p.y), p.label), class: "ink" }, p.label));
     const hit = s("circle", { cx: x(p.x), cy: y(p.y), r: 14, fill: "transparent", tabindex: 0 });
     hit.addEventListener("pointermove", (ev) => tip.show(ev, [h("div", {}, h("b", {}, yfmt(p.y)), "  ", p.label),
       h("div", {}, `${xlabel}: ${xfmt(p.x)}`)]));
@@ -224,7 +240,7 @@ export function scatter(el, { points, groups, path, xlabel, ylabel, xfmt, yfmt, 
 }
 
 // Grouped horizontal bars: rows [{label, values: {key: v}}], series [{key,label,color}], optional ref line.
-export function groupedBars(el, { rows, series, fmt, ref, refLabel, empty = "Runs pending." }) {
+export function groupedBars(el, { rows, series, fmt, ref, refLabel, empty = "Runs pending.", rowLabel = "Attack" }) {
   el.replaceChildren();
   const wrap = h("div", { class: "chart" });
   el.append(legend(series), wrap);
@@ -232,7 +248,7 @@ export function groupedBars(el, { rows, series, fmt, ref, refLabel, empty = "Run
   const bh = 12, gap = 2, group = series.length * (bh + gap) + 14;
   const W = widthOf(el), L = 150, R = 60, T = 16;
   const H = T + rows.length * group + 24;
-  const vmax = niceMax(Math.max(ref || 0, ...rows.flatMap((r) => series.map((sr) => r.values[sr.key] || 0))));
+  const vmax = niceMax(1.08 * Math.max(ref || 0, ...rows.flatMap((r) => series.map((sr) => r.values[sr.key] || 0))));
   const x = (v) => L + (W - L - R) * (v / vmax);
   const svg = s("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img" });
   const g = s("g", { class: "grid" });
@@ -264,6 +280,6 @@ export function groupedBars(el, { rows, series, fmt, ref, refLabel, empty = "Run
     });
   });
   wrap.append(svg);
-  tableToggle(el, ["Attack", ...series.map((sr) => sr.label)],
+  tableToggle(el, [rowLabel, ...series.map((sr) => sr.label)],
     rows.map((r) => [r.label, ...series.map((sr) => (r.values[sr.key] == null ? "–" : fmt(r.values[sr.key])))]));
 }

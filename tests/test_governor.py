@@ -41,6 +41,18 @@ def test_cascade_accepts_confident_draft(cfg, upstream, tmp_path):
     assert len(rows) == 1 and json.loads(rows[0]["decision"])["action"] == "accept"
 
 
+def test_accepted_draft_streams_back_when_a_saver_buffers(cfg, upstream, tmp_path):
+    # the hold saver buffers a streamed call so the governor can act on it; the accepted draft must still go back as SSE
+    app, _ = make_client(cfg, upstream, savers=[{"name": "hold", "pattern": "update-bank"}],
+                         governor={"mode": "cascade", "alpha": 0.05, "gate": gate(tmp_path, {"0.05": 0.5})})
+    with TestClient(app) as c:
+        r = c.post("/v1/chat/completions", headers=H, json={"model": "strong", "stream": True,
+                                                            "messages": [{"role": "user", "content": "hello there"}]})
+    assert r.headers["content-type"].startswith("text/event-stream")
+    chunks = [json.loads(l[6:]) for l in r.text.splitlines() if l.startswith("data: {")]
+    assert chunks[0]["choices"][0]["delta"]["content"] == "answer from qwen3.5-4b"
+
+
 def test_cascade_escalates_unsure_draft(cfg, upstream, tmp_path):
     upstream.logprob = -2.0
     app, led = make_client(cfg, upstream, governor={"mode": "cascade", "alpha": 0.05, "gate": gate(tmp_path, {"0.05": 0.5})})

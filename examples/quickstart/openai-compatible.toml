@@ -5,7 +5,7 @@
 #   truecost serve --config examples/quickstart/openai-compatible.toml --port 30020
 db = "~/.truecost/quickstart.db"
 default_tier = "strong"
-nvml = false   # set true when the models run on this machine's NVIDIA GPUs: adds measured energy and GPU time
+nvml = false   # models on this machine's NVIDIA GPUs: set true and `gpu = <index>` per tier for measured energy and GPU time
 
 [upstreams.strong]
 base_url = "https://api.example.com/v1"

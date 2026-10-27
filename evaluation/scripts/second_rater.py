@@ -17,7 +17,7 @@ import re
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))  # the repository root
 from truecost.safety import CONSEQUENTIAL, DOMAINS, check  # noqa: E402
 
 RULES = ("auth_first", "confirm_first", "other_user", "status_first", "cancel_reason")

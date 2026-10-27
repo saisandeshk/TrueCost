@@ -72,8 +72,8 @@ class Config:
     model_map: dict[str, str] = field(default_factory=dict)  # glob on the requested model -> tier
     savers: list[dict] = field(default_factory=list)
     governor: dict | None = None
-    nvml: bool = True
-    nvml_gpus: list[int] | None = None
+    nvml: bool = True                   # false: no energy meter (hosted APIs); true meters the tiers that set `gpu`
+    nvml_gpus: list[int] | None = None  # GPUs to read (default: all)
     timeout_s: float = 900.0
 
     @classmethod

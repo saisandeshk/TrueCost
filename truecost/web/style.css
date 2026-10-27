@@ -56,7 +56,7 @@ nav a.on { color: var(--ink); background: var(--wash); font-weight: 600; }
 .spacer { flex: 1; }
 button.theme { background: none; border: 1px solid var(--grid); color: var(--ink-2); border-radius: 8px; padding: 4px 10px; cursor: pointer; }
 
-main { max-width: 1240px; margin: 0 auto; padding: 20px 24px 64px; }
+main { max-width: 1400px; margin: 0 auto; padding: 20px 24px 64px; }
 .filters { display: flex; gap: 10px; align-items: center; margin: 4px 0 18px; flex-wrap: wrap; }
 .filters label { color: var(--muted); font-size: 13px; }
 select, input[type="range"] { font: inherit; }
@@ -102,6 +102,11 @@ table.t tr.click { cursor: pointer; }
 table.t tr.click:hover td { background: var(--wash); }
 table.t tr.fresh td { animation: fresh 1.4s ease-out; }
 @keyframes fresh { from { background: var(--s1-track); } to { background: transparent; } }
+/* the crash-test board: one line per number, wrapped headers, room for the condition and its description */
+.scroll { overflow-x: auto; }
+table.board th.n { white-space: normal; }
+table.board td.n { white-space: nowrap; }
+table.board td.trick { min-width: 210px; }
 
 .st { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
 .st i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }

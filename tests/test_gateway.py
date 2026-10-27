@@ -177,6 +177,31 @@ def test_anthropic_messages_passthrough(cfg, upstream):
     assert rows[1]["output_tokens"] == 7 and json.loads(rows[1]["tool_names"]) == ["Bash"]
 
 
+def test_count_tokens_sends_the_upstream_key(cfg, upstream):
+    cfg.upstreams["strong"].api_key = "sk-test"
+    seen = []
+
+    def handler(request):
+        seen.append(request)
+        return httpx.Response(200, json={"input_tokens": 3})
+    upstream.handler = handler
+    app, _ = make_client(cfg, upstream)
+    with TestClient(app) as c:
+        r = c.post("/v1/messages/count_tokens", json={"model": "claude-opus-5-5", "messages": [{"role": "user", "content": "hi"}]})
+    assert r.json() == {"input_tokens": 3}
+    assert seen[0].url.path == "/v1/messages/count_tokens" and seen[0].headers["x-api-key"] == "sk-test"
+
+
+def test_nvml_off_disables_the_energy_meter(cfg, monkeypatch):
+    from truecost import gateway
+    asked = []
+    monkeypatch.setattr(gateway, "EnergyMeter", lambda gpus: asked.append(gpus) or EnergyMeter(gpus=[]))
+    gateway.Gateway(cfg)
+    cfg.nvml = False
+    gateway.Gateway(cfg)
+    assert asked == [None, []]  # default: every GPU; nvml = false: none
+
+
 def test_responses_passthrough(cfg, upstream):
     app, led = make_client(cfg, upstream)
     with TestClient(app) as c:

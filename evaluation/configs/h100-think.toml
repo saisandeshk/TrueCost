@@ -72,7 +72,7 @@ force = { temperature = 0.0, chat_template_kwargs = { enable_thinking = false } 
 [upstreams.nemotron]
 base_url = "http://127.0.0.1:30013/v1"
 model = "nemotron-3-nano-30b"
-price = "nvidia/nemotron-3-nano-30b-a3b"  # OpenRouter list (Qwen tiers use the AA median; noted on the board)
+price = "nvidia/nemotron-3-nano-30b-a3b"  # OpenRouter list (Qwen tiers use the AA median; see PROTOCOL.md)
 gpu = 0
 max_tokens_cap = 6144
 strip_grammar = true
