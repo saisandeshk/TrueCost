@@ -37,7 +37,7 @@ python evaluation/scripts/merge_ledgers.py ~/.truecost/results.db host1/ledger.d
 python evaluation/scripts/boards.py ~/.truecost/results.db > results/boards.md   # every board, attacks, the demo
 python evaluation/scripts/figures.py ~/.truecost/results.db      # results/figures/retail-*.png + retail-numbers.json
 python evaluation/scripts/regimes.py ~/.truecost/results.db      # results/figures/regimes.png
-python evaluation/scripts/rater_summary.py rater-retail.jsonl > results/rater-summary.json   # rater numbers
+xz -dk rater-retail.jsonl.xz && python evaluation/scripts/rater_summary.py rater-retail.jsonl > results/rater-summary.json
 ```
 
 To check our numbers without a GPU, fetch the published ledger (`truecost demo --download-only`) and the rater's

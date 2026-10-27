@@ -19,7 +19,7 @@ own. On finance back-office work the cheap model verifies 1 task in 100 against 
 router that leans on it loses 13–25 points and costs more per finished task. The governor is the only control that
 held quality on both, because its gate adapts to the work: in the calibration data the cheap model's step matches the
 strong model's on 66% of retail steps but only 6% of finance steps, and on the held-out tasks the gate kept the cheap
-draft half as often on finance as on retail (24% against 48% of the steps it judged at α = 10%; 43% against 71% at
+draft far less often on finance than on retail (24% against 48% of the steps it judged at α = 10%; 43% against 71% at
 α = 20%). It declines to save where saving is unsafe.
 
 ## 2. What each saving really buys (retail, 8 seeds)
