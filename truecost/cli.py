@@ -5,6 +5,7 @@
   truecost import-autobench export.json --run R
   truecost crashtest grids/retail.toml [--only baseline mask]
   truecost report R [R ...] [--baseline B] [--json]
+  truecost outcome R TASK verified|failed
   truecost demo [--download-only]
   truecost prices
 """
@@ -179,8 +180,20 @@ def cmd_demo(a):
 
     from .console import create_console
 
-    print(f"TrueCost console on the published results: http://{a.host}:{a.port}", file=sys.stderr)
-    uvicorn.run(create_console([str(dest)], None), host=a.host, port=a.port, log_level="warning", access_log=False)
+    print(f"TrueCost console on the published results: http://{a.host}:{a.port}/#/crashtest", file=sys.stderr)
+    gates = Path(__file__).resolve().parents[1] / "evaluation" / "gates"  # the frozen gates, in a repository checkout
+    uvicorn.run(create_console([str(dest)], str(gates) if gates.is_dir() else None), host=a.host, port=a.port,
+                log_level="warning", access_log=False)
+
+
+def cmd_outcome(a):
+    """Record a task's graded outcome, so its calls count toward $ per verified task."""
+    from .ledger import FAILED, VERIFIED
+
+    led = _ledger(a.db)
+    led.upsert_task({"task_key": f"{a.run}/{a.task}", "run_id": a.run, "task_id": a.task,
+                     "outcome": VERIFIED if a.outcome == "verified" else FAILED})
+    led.upsert_run({"run_id": a.run})
 
 
 def cmd_calibrate(a):
@@ -326,6 +339,12 @@ def main(argv=None):
     s.add_argument("--port", type=int, default=8686)
     s.add_argument("--gates", help="directory of calibrated gate files (default: <first ledger dir>/gates)")
     s.set_defaults(fn=cmd_console)
+
+    s = sub.add_parser("outcome", help="record a task's graded outcome (from your own tests or grader)")
+    s.add_argument("run")
+    s.add_argument("task", help="the X-TrueCost-Task id the agent's calls carried")
+    s.add_argument("outcome", choices=["verified", "failed"])
+    s.set_defaults(fn=cmd_outcome)
 
     s = sub.add_parser("demo", help="open the console on the published results (downloads them once)")
     s.add_argument("--path", default="~/.truecost/results.db")

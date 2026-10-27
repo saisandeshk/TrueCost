@@ -28,3 +28,14 @@ def test_console_endpoints(cfg, upstream, tmp_path):
     assert ct["baseline"] == "baseline" and ct["rows"][0]["stars"]["reliability"] == 5
     assert con.get("/api/task?key=r1/1").json()["task"]["outcome"] == "verified"
     assert con.get("/").status_code == 200 and con.get("/static/app.js").status_code == 200
+
+
+def test_outcome_command_marks_tasks(tmp_path):
+    from truecost import cli
+    from truecost.ledger import Ledger
+
+    db = str(tmp_path / "l.db")
+    cli.main(["--db", db, "outcome", "r1", "t1", "verified"])
+    cli.main(["--db", db, "outcome", "r1", "t2", "failed"])
+    rows = {r["task_key"]: r["outcome"] for r in Ledger(db).query("SELECT task_key, outcome FROM tasks")}
+    assert rows == {"r1/t1": "verified", "r1/t2": "failed"}

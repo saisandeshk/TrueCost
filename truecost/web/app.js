@@ -202,9 +202,9 @@ const STACK = {
   "sy-stage": "NVIDIA NeMo Switchyard · stage router (tuned for coding agents)",
   "sy-escalation-j27": "NVIDIA NeMo Switchyard · escalation router, 27B as judge",
   "nemotron-think": "NVIDIA Nemotron-3-Nano-30B-A3B as shipped (reasoning on)",
-  "gov2-a100": "TrueCost governor + policy check · gate off: 9B every step, writes pinned to the 27B and policy-checked",
+  "gov-policy-a100": "TrueCost governor + policy check · gate off: 9B every step, writes pinned to the 27B and policy-checked",
 };
-const stackOf = (c) => STACK[c] || (/^gov2-a/.test(c) ? `TrueCost governor + policy check · risk budget α ${c.replace("gov2-a", "")}% + pre-write policy check`
+const stackOf = (c) => STACK[c] || (/^gov-policy-a/.test(c) ? `TrueCost governor + policy check · risk budget α ${c.replace("gov-policy-a", "")}%`
   : /^gov-a/.test(c) ? `TrueCost governor · risk budget α ${c.replace("gov-a", "")}%` : null);
 const co2 = (r) => r.compare.co2_g_per_verified_run == null ? "" : ` · ${r.compare.co2_g_per_verified_run.toFixed(2)} g CO₂ per verified (India grid, CEA 0.727 g/Wh)`;
 function beyond(r) {

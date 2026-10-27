@@ -204,14 +204,14 @@ class Console:
 
     # ---- crash-test -----------------------------------------------------------------------------
     def workloads(self) -> list[dict[str, Any]]:
-        """Workloads with at least one graded run, the richest first."""
+        """Workloads with at least one graded run: those with a baseline (so a crash-test board) first, then the richest."""
         rows = self.q("""SELECT r.workload, r.condition FROM runs r WHERE r.workload IS NOT NULL
                          AND EXISTS (SELECT 1 FROM tasks t WHERE t.run_id = r.run_id)""")
         out: dict[str, set] = defaultdict(set)
         for r in rows:
             out[r["workload"]].add(r["condition"])
         return sorted(({"workload": w, "conditions": sorted(c for c in cs if c)} for w, cs in out.items()),
-                      key=lambda x: (-len(x["conditions"]), x["workload"]))
+                      key=lambda x: ("baseline" not in x["conditions"], -len(x["conditions"]), x["workload"]))
 
     def _by_cond(self, workload: str) -> dict[str, dict[str, str]]:
         """condition -> {seed: run_id}, graded runs only."""
