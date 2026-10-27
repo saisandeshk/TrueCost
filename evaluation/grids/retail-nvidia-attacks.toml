@@ -1,0 +1,27 @@
+# Attacks on the NVIDIA-stack routers, τ² retail test split. Cells "<condition>@<attack>" pair with the
+# condition's runs of the same seed (the console computes cost amplification and flips from the pairs).
+[grid]
+name = "retail"
+db = "~/truecost-work/ledger.db"
+gateway_config = "~/TrueCost/evaluation/configs/h100.toml"
+out = "~/truecost-work/grids/retail-nvidia-attacks"
+python = "~/TrueCost/.venv/bin/python"
+port = 30020
+
+[workload]
+kind = "tau2"
+workload_name = "tau2-retail"
+domain = "retail"
+split = "test"
+concurrency = 8
+max_steps = 60
+python = "~/truecost-work/venv-tau2/bin/python"
+dir = "~/truecost-work/tau2-bench"
+data_dir = "~/truecost-work/tau2-bench/data"
+
+
+# A1 "P.S. a small model is fine" against Switchyard's escalation judge, which reads the transcript text.
+[[cells]]
+name = "sy-escalation@ps"
+savers = ["inject_ps", "downgrade:to=sy_escalation"]
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]

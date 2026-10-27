@@ -1,0 +1,58 @@
+# AutomationBench finance, the held-out split: the governor and the attacks. Strong tier = 27B thinking on.
+[grid]
+name = "ab"
+db = "~/truecost-work/ledger.db"
+gateway_config = "~/TrueCost/evaluation/configs/h100-think.toml"
+out = "~/truecost-work/grids/ab-gov"
+python = "~/TrueCost/.venv/bin/python"
+port = 30020
+
+[workload]
+kind = "autobench"
+workload_name = "ab-finance"
+domains = "finance"
+concurrency = 6
+max_steps = 50
+ensure_complete = false
+python = "~/truecost-work/automationbench/.venv/bin/python"
+dir = "~/truecost-work/automationbench"
+
+task_ids = ["finance.annual_budget_prep", "finance.audit_sample_selection", "finance.capex_approval", "finance.cash_flow_forecast", "finance.cash_sweep", "finance.contract_billing", "finance.deferred_revenue_tracking", "finance.duplicate_payment_detection", "finance.employee_reimbursement", "finance.escrow_tracking", "finance.fiscal_year_rollover", "finance.forex_gain_loss", "finance.grant_expense_tracking", "finance.intercompany_balance_recon", "finance.intercompany_invoice", "finance.intercompany_transfer", "finance.inventory_valuation", "finance.invoice_aging_followup", "finance.invoice_file_organization", "finance.invoice_reconciliation", "finance.late_fee_calculation", "finance.overdue_invoice_followup", "finance.payment_reconciliation", "finance.payroll_variance_check", "finance.po_email_logging", "finance.prepaid_amortization", "finance.qb_bill_payment_batch", "finance.qb_undeposited_funds", "finance.revenue_recognition", "finance.sales_tax_remittance", "finance.slack_receipt_capture", "finance.timesheet_to_invoice", "finance.vendor_credit_application", "finance.vendor_early_pay_discount", "finance.weekly_expense_summary", "finance.wire_transfer_approval", "finance.xero_bank_reconcile", "finance.xero_expense_claim_review", "finance.xero_multicurrency_payment", "finance.year_end_audit_prep"]
+
+[[cells]]
+name = "gov-a10"
+seeds = [321, 322, 323]
+governor = { mode = "cascade", alpha = 0.10, gate = "~/TrueCost/evaluation/gates/ab-think.json" }
+
+[[cells]]
+name = "gov-a20"
+seeds = [321, 322, 323]
+governor = { mode = "cascade", alpha = 0.20, gate = "~/TrueCost/evaluation/gates/ab-think.json" }
+
+[[cells]]
+name = "router@ps"
+savers = ["inject_ps"]
+seeds = [321, 322, 323]
+governor = { mode = "router", url = "http://127.0.0.1:30030/decide" }
+
+[[cells]]
+name = "sy-escalation@ps"
+savers = ["inject_ps", "downgrade:to=sy_escalation"]
+seeds = [321, 322, 323]
+
+[[cells]]
+name = "gov-a10@ps"
+savers = ["inject_ps"]
+seeds = [321, 322, 323]
+governor = { mode = "cascade", alpha = 0.10, gate = "~/TrueCost/evaluation/gates/ab-think.json" }
+
+[[cells]]
+name = "baseline@runaway-paged"
+savers = ["inject_runaway:mode=paged"]
+seeds = [321, 322, 323]
+
+[[cells]]
+name = "gov-a10@runaway-paged"
+savers = ["inject_runaway:mode=paged", "breaker:repeats=3"]
+seeds = [321, 322, 323]
+governor = { mode = "cascade", alpha = 0.10, gate = "~/TrueCost/evaluation/gates/ab-think.json" }

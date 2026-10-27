@@ -1,0 +1,50 @@
+# AutomationBench finance (the public set): every task, the baseline in record mode and the savings under test. Strong tier = 27B thinking on.
+[grid]
+name = "ab"
+db = "~/truecost-work/ledger.db"
+gateway_config = "~/TrueCost/evaluation/configs/h100-think.toml"
+out = "~/truecost-work/grids/ab-board"
+python = "~/TrueCost/.venv/bin/python"
+port = 30020
+
+[workload]
+kind = "autobench"
+workload_name = "ab-finance"
+domains = "finance"
+concurrency = 6
+max_steps = 50
+ensure_complete = false
+python = "~/truecost-work/automationbench/.venv/bin/python"
+dir = "~/truecost-work/automationbench"
+
+task_ids = ["finance.airtable_expense_approval", "finance.ap_aging_report", "finance.ap_turnover_analysis", "finance.bad_debt_writeoff", "finance.bank_fee_analysis", "finance.budget_variance_analysis", "finance.closing_journal_automation", "finance.commission_calculation", "finance.cost_center_allocation", "finance.credit_card_reconciliation", "finance.credit_limit_review", "finance.depreciation_schedule", "finance.dept_expense_rollup", "finance.expense_anomaly_detection", "finance.expense_policy_violation", "finance.expense_reclassification", "finance.expense_split_allocation", "finance.financial_close_checklist", "finance.financial_ratio_analysis", "finance.gl_variance_analysis", "finance.invoice_dispute", "finance.invoice_email_extract", "finance.lease_payment_schedule", "finance.monday_project_billing", "finance.monthend_journal_entries", "finance.multicurrency_invoice", "finance.payment_fraud_detection", "finance.payment_terms_tracking", "finance.petty_cash_reconciliation", "finance.po_three_way_match", "finance.profit_margin_analysis", "finance.project_profitability", "finance.qb_customer_balance_review", "finance.qb_customer_onboard", "finance.qb_estimate_conversion", "finance.qb_invoice_from_orders", "finance.qb_recurring_journal", "finance.qb_sales_receipt_batch", "finance.qb_void_stale_invoices", "finance.quarterly_tax_estimate", "finance.refund_processing", "finance.subscription_billing", "finance.tax_prep_summary", "finance.travel_advance_settlement", "finance.vendor_1099_prep", "finance.vendor_insurance_verification", "finance.vendor_payment_approval", "finance.vendor_spend_analysis", "finance.vendor_statement_reconciliation", "finance.wave_client_statement", "finance.wave_expense_categorization", "finance.wave_freelance_invoice", "finance.wave_product_catalog", "finance.wave_tax_compliance", "finance.xero_batch_invoice_send", "finance.xero_bill_entry", "finance.xero_credit_allocation", "finance.xero_po_matching", "finance.xero_quote_to_invoice", "finance.xero_vendor_onboard", "finance.annual_budget_prep", "finance.audit_sample_selection", "finance.capex_approval", "finance.cash_flow_forecast", "finance.cash_sweep", "finance.contract_billing", "finance.deferred_revenue_tracking", "finance.duplicate_payment_detection", "finance.employee_reimbursement", "finance.escrow_tracking", "finance.fiscal_year_rollover", "finance.forex_gain_loss", "finance.grant_expense_tracking", "finance.intercompany_balance_recon", "finance.intercompany_invoice", "finance.intercompany_transfer", "finance.inventory_valuation", "finance.invoice_aging_followup", "finance.invoice_file_organization", "finance.invoice_reconciliation", "finance.late_fee_calculation", "finance.overdue_invoice_followup", "finance.payment_reconciliation", "finance.payroll_variance_check", "finance.po_email_logging", "finance.prepaid_amortization", "finance.qb_bill_payment_batch", "finance.qb_undeposited_funds", "finance.revenue_recognition", "finance.sales_tax_remittance", "finance.slack_receipt_capture", "finance.timesheet_to_invoice", "finance.vendor_credit_application", "finance.vendor_early_pay_discount", "finance.weekly_expense_summary", "finance.wire_transfer_approval", "finance.xero_bank_reconcile", "finance.xero_expense_claim_review", "finance.xero_multicurrency_payment", "finance.year_end_audit_prep"]
+
+[[cells]]
+name = "baseline"
+seeds = [321, 322, 323]
+governor = { mode = "record", von_url = "http://127.0.0.1:30030/decide" }
+
+[[cells]]
+name = "downgrade"
+savers = ["downgrade"]
+seeds = [321, 322, 323]
+
+[[cells]]
+name = "sy-escalation"
+savers = ["downgrade:to=sy_escalation"]
+seeds = [321, 322, 323]
+
+[[cells]]
+name = "sy-stage"
+savers = ["downgrade:to=sy_stage"]
+seeds = [321, 322, 323]
+
+[[cells]]
+name = "router"
+seeds = [321, 322, 323]
+governor = { mode = "router", url = "http://127.0.0.1:30030/decide" }
+
+[[cells]]
+name = "mask"
+savers = ["mask:keep_last=8"]
+seeds = [321, 322, 323]

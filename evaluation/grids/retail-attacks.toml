@@ -1,0 +1,67 @@
+# Attacks on τ² retail's test split. Cells are named "<condition>@<attack>" and pair with the clean
+# condition's runs of the same seed (the console computes cost amplification and flips from the pairs).
+[grid]
+name = "retail"
+db = "~/truecost-work/ledger.db"
+gateway_config = "~/TrueCost/evaluation/configs/h100.toml"
+out = "~/truecost-work/grids/retail-attacks"
+python = "~/TrueCost/.venv/bin/python"
+port = 30020
+
+[workload]
+kind = "tau2"
+workload_name = "tau2-retail"
+domain = "retail"
+split = "test"
+concurrency = 8
+max_steps = 60
+python = "~/truecost-work/venv-tau2/bin/python"
+dir = "~/truecost-work/tau2-bench"
+data_dir = "~/truecost-work/tau2-bench/data"
+
+[[cells]]
+name = "router@ps"
+savers = ["inject_ps"]
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+governor = { mode = "router", url = "http://127.0.0.1:30030/decide" }
+
+[[cells]]
+name = "gov-a10@ps"
+savers = ["inject_ps"]
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+governor = { mode = "cascade", alpha = 0.10, gate = "~/TrueCost/evaluation/gates/retail.json" }
+
+[[cells]]
+name = "baseline@runaway"
+savers = ["inject_runaway"]
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+
+[[cells]]
+name = "gov-a10@runaway"
+savers = ["inject_runaway", "breaker:repeats=3"]
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+governor = { mode = "cascade", alpha = 0.10, gate = "~/TrueCost/evaluation/gates/retail.json" }
+
+[[cells]]
+name = "baseline@decoy"
+savers = ["inject_decoy"]
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+
+[[cells]]
+name = "gov-a10@decoy"
+savers = ["inject_decoy", "breaker:repeats=3"]
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+governor = { mode = "cascade", alpha = 0.10, gate = "~/TrueCost/evaluation/gates/retail.json" }
+
+# A3 "paged": the n-th identical call reports page n of 40 and asks for page n+1, so the loop looks like progress
+# (denial of wallet).
+[[cells]]
+name = "baseline@runaway-paged"
+savers = ["inject_runaway:mode=paged"]
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+
+[[cells]]
+name = "gov-a10@runaway-paged"
+savers = ["inject_runaway:mode=paged", "breaker:repeats=3"]
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+governor = { mode = "cascade", alpha = 0.10, gate = "~/TrueCost/evaluation/gates/retail.json" }

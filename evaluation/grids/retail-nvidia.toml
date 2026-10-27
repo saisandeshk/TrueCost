@@ -1,0 +1,58 @@
+# τ²-bench retail, all 114 tasks: the NVIDIA-stack conditions (Nemotron, Switchyard), on H100s.
+# Pairs with retail-main.toml's baseline of the same seed. Ratings: evaluation/PROTOCOL.md.
+[grid]
+name = "retail"
+db = "~/truecost-work/ledger.db"
+gateway_config = "~/TrueCost/evaluation/configs/h100.toml"
+out = "~/truecost-work/grids/retail-nvidia"
+python = "~/TrueCost/.venv/bin/python"
+port = 30020
+
+[workload]
+kind = "tau2"
+workload_name = "tau2-retail"
+domain = "retail"
+concurrency = 8
+max_steps = 60
+python = "~/truecost-work/venv-tau2/bin/python"
+dir = "~/truecost-work/tau2-bench"
+data_dir = "~/truecost-work/tau2-bench/data"
+
+# NeMo Switchyard escalation router (configs/switchyard.toml route sy-escalation): weak first, a judge (the 9B)
+# reads each finished turn, two confirmed "stuck" verdicts latch the task to the strong model.
+[[cells]]
+name = "sy-escalation"
+savers = ["downgrade:to=sy_escalation"]
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+
+# The same escalation router with the 27B as Switchyard's judge.
+[[cells]]
+name = "sy-escalation-j27"
+savers = ["downgrade:to=sy_escalation_j27"]
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+
+# NeMo Switchyard stage router (reads tool-result history; tuned for coding agents).
+[[cells]]
+name = "sy-stage"
+savers = ["downgrade:to=sy_stage"]
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+
+# Downgrade to NVIDIA Nemotron-3-Nano-30B-A3B (FP8). Needs the h100-nemotron tier layout (the 27B is swapped out).
+[[cells]]
+name = "nemotron"
+savers = ["downgrade:to=nemotron"]
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+
+# Nemotron as NVIDIA ships it (reasoning on, its default sampling). The row above runs it with the settings every other
+# tier uses (thinking off, temperature 0); a fair comparison needs both rows.
+[[cells]]
+name = "nemotron-think"
+savers = ["downgrade:to=nemotron_think"]
+seeds = [303, 304, 305]
+
+# Nemotron as shipped, served by NVIDIA NIM (nvcr.io/nim/nvidia/nemotron-3-nano) instead of SGLang, same settings
+# (reasoning on, its default sampling). A separate row; the SGLang row stays. Run with evaluation/serving/nim_nemotron.sh.
+[[cells]]
+name = "nemotron-think-nim"
+savers = ["downgrade:to=nemotron_think"]
+seeds = [303, 304, 305]

@@ -1,0 +1,59 @@
+# NeMo Switchyard (v0.3) as a router under test. Every model call Switchyard makes goes back through
+# the TrueCost gateway (port 30020, the crash-test runner's gateway), with forward_auth so the agent's task travels
+# with it (see truecost/gateway.py "Switchyard mode"). Start: switchyard-server --config evaluation/configs/switchyard.toml --port 30031
+schema_version = 1
+
+[llm_clients.gateway]
+format = "openai_chat"
+base_url = "http://127.0.0.1:30020/v1"
+forward_auth = true
+timeout_ms = 900000
+
+[targets.strong]
+id = "qwen3.8-27b"
+llm_client = "gateway"
+
+[targets.weak]
+id = "qwen3.5-9b-awq"
+llm_client = "gateway"
+
+[targets.judge]
+id = "switchyard-judge"   # the gateway maps this to the 9B and books it as router overhead
+llm_client = "gateway"
+
+[targets.judge27]
+id = "switchyard-judge-27b"   # the 27B as judge (gateway maps it to the 27B, booked as router overhead)
+llm_client = "gateway"
+
+# Escalation. The weak model answers first; the judge reads the transcript plus the weak reply each turn;
+# two confirmed "stuck" verdicts latch the session (one τ² task) to the strong model. Defaults are NVIDIA's
+# benchmarked settings. json_object: the schema goes in the prompt (local tiers run without constrained decoding).
+[routes.escalation]
+id = "sy-escalation"
+type = "llm_classifier"
+mode = "escalation"
+classifier_target = "judge"
+strong_target = "strong"
+weak_target = "weak"
+response_format_type = "json_object"
+escalation = {}
+
+# The same escalation route with the 27B as judge (cell sy-escalation-j27).
+[routes.escalation_j27]
+id = "sy-escalation-j27"
+type = "llm_classifier"
+mode = "escalation"
+classifier_target = "judge27"
+strong_target = "strong"
+weak_target = "weak"
+response_format_type = "json_object"
+escalation = {}
+
+# Stage router (reads tool-result history; tuned for coding agents, so τ² is off its home turf).
+[routes.stage]
+id = "sy-stage"
+type = "stage_router"
+capable_target = "strong"
+efficient_target = "weak"
+picker = "efficient_first"
+confidence_threshold = 0.5

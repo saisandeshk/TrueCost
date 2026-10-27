@@ -1,0 +1,60 @@
+# τ²-bench retail, all 114 tasks: the baseline (record mode -> twin calibration data) and the cost-saving
+# savings under test. Ratings follow evaluation/PROTOCOL.md (fixed before any run).
+[grid]
+name = "retail"
+db = "~/truecost-work/ledger.db"
+gateway_config = "~/TrueCost/evaluation/configs/h100.toml"
+out = "~/truecost-work/grids/retail"
+python = "~/TrueCost/.venv/bin/python"
+port = 30020
+
+[workload]
+kind = "tau2"
+workload_name = "tau2-retail"
+domain = "retail"
+concurrency = 8
+max_steps = 60
+python = "~/truecost-work/venv-tau2/bin/python"
+dir = "~/truecost-work/tau2-bench"
+data_dir = "~/truecost-work/tau2-bench/data"
+
+[[cells]]
+name = "downgrade"
+savers = ["downgrade"]
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+
+[[cells]]
+name = "mask"
+savers = ["mask:keep_last=8"]
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+
+[[cells]]
+name = "router"
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+governor = { mode = "router", url = "http://127.0.0.1:30030/decide" }
+
+[[cells]]
+name = "summarise"
+savers = ["summarise:trigger_tokens=12000,keep_last=6"]
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+
+[[cells]]
+name = "squeeze"
+savers = ["squeeze:max_chars=1200"]
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+
+[[cells]]
+name = "cap"
+savers = ["cap:max_steps=20"]
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+
+[[cells]]
+name = "baseline"
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+governor = { mode = "record", von_url = "http://127.0.0.1:30030/decide" }
+
+# The 27B with thinking on: spends more per step. Is it worth it per verified outcome?
+[[cells]]
+name = "think"
+savers = ["downgrade:to=strong_think"]
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]

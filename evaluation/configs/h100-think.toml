@@ -1,0 +1,109 @@
+# The finance board: the same H100 tiers as h100.toml, except that the STRONG tier is the 27B with
+# thinking on (finance needs it: thinking off verified too few tasks to compare savings on). Everything that
+# routes to "strong" (the baseline, Switchyard's strong target, the governor's escalations and pins) gets it.
+# Gateway for one 80 GB H100: the strong and cheap tiers share the GPU (gpu = 0 everywhere;
+# evaluation/serving/tiers.sh layout "h100").
+db = "~/truecost-work/ledger.db"
+default_tier = "strong"
+
+[upstreams.strong]
+base_url = "http://127.0.0.1:30011/v1"
+model = "qwen3.8-27b"
+gpu = 0
+max_tokens_cap = 8192
+strip_grammar = true
+force = { temperature = 0.0, chat_template_kwargs = { enable_thinking = true } }
+
+[upstreams.cheap]
+base_url = "http://127.0.0.1:30012/v1"
+model = "qwen3.5-9b-awq"
+price = "qwen3.5-9b"
+gpu = 0
+max_tokens_cap = 6144
+strip_grammar = true
+force = { temperature = 0.0, chat_template_kwargs = { enable_thinking = false } }
+
+[upstreams.sim]
+base_url = "http://127.0.0.1:30012/v1"
+model = "qwen3.5-9b-awq"
+price = "qwen3.5-9b"
+gpu = 0
+max_tokens_cap = 6144
+strip_grammar = true
+force = { temperature = 0.0, chat_template_kwargs = { enable_thinking = false } }
+
+[roles]
+simulator = "sim"
+judge = "sim"
+
+# The same 27B with thinking on (Artificial Analysis rates Qwen3.8-27B 34 with reasoning vs 20 without).
+# Route agent steps here with the saver "downgrade:to=strong_think" (it simply pins agent calls to a tier).
+[upstreams.strong_think]
+base_url = "http://127.0.0.1:30011/v1"
+model = "qwen3.8-27b"
+gpu = 0
+max_tokens_cap = 8192
+strip_grammar = true
+force = { temperature = 0.0, chat_template_kwargs = { enable_thinking = true } }
+
+# NeMo Switchyard routes (evaluation/configs/switchyard.toml, port 30031). Grid cells pin agent calls here with
+# "downgrade:to=sy_escalation" / "sy_stage"; Switchyard's own model calls come back as inner calls.
+[upstreams.sy_escalation]
+base_url = "http://127.0.0.1:30031/v1"
+model = "sy-escalation"
+switchyard = true
+
+[upstreams.sy_stage]
+base_url = "http://127.0.0.1:30031/v1"
+model = "sy-stage"
+switchyard = true
+
+# Switchyard's judge: the 9B, booked as router overhead (agent-side cost). Grammar kept: the judge needs JSON.
+[upstreams.judge]
+base_url = "http://127.0.0.1:30012/v1"
+model = "qwen3.5-9b-awq"
+price = "qwen3.5-9b"
+gpu = 0
+max_tokens_cap = 2048
+book_role = "router"
+force = { temperature = 0.0, chat_template_kwargs = { enable_thinking = false } }
+
+# Nemotron-3-Nano-30B-A3B (NVIDIA), served on port 30013 while the 27B is stopped (tiers.sh layout h100-nemotron).
+[upstreams.nemotron]
+base_url = "http://127.0.0.1:30013/v1"
+model = "nemotron-3-nano-30b"
+price = "nvidia/nemotron-3-nano-30b-a3b"  # OpenRouter list (Qwen tiers use the AA median; noted on the board)
+gpu = 0
+max_tokens_cap = 6144
+strip_grammar = true
+force = { temperature = 0.0, chat_template_kwargs = { enable_thinking = false } }
+
+# Nemotron as NVIDIA ships it: reasoning on and its generation-config sampling (temperature 1.0, top_p 1.0), the
+# way NVIDIA benchmarks it. The "nemotron" tier above runs it like every other tier (thinking off, temperature 0).
+[upstreams.nemotron_think]
+base_url = "http://127.0.0.1:30013/v1"
+model = "nemotron-3-nano-30b"
+price = "nvidia/nemotron-3-nano-30b-a3b"
+gpu = 0
+max_tokens_cap = 16384
+strip_grammar = true
+force = { temperature = 1.0, top_p = 1.0, chat_template_kwargs = { enable_thinking = true } }
+
+# Cell sy-escalation-j27: the same escalation route, judged by the 27B instead of the 9B. Booked as router overhead
+# like the 9B judge.
+[upstreams.judge27]
+base_url = "http://127.0.0.1:30011/v1"
+model = "qwen3.8-27b"
+gpu = 0
+max_tokens_cap = 2048
+book_role = "router"
+force = { temperature = 0.0, chat_template_kwargs = { enable_thinking = false } }
+
+[upstreams.sy_escalation_j27]
+base_url = "http://127.0.0.1:30031/v1"
+model = "sy-escalation-j27"
+switchyard = true
+
+[model_map]
+"switchyard-judge" = "judge"
+"switchyard-judge-27b" = "judge27"

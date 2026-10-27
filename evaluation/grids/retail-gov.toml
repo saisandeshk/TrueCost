@@ -1,0 +1,53 @@
+# TrueCost governor on τ² retail's held-out test split (40 tasks; calibration used train-split tasks only).
+# The gates are frozen in evaluation/gates/ (fitted once by `truecost calibrate` from the baselines' training-task twins).
+[grid]
+name = "retail"
+db = "~/truecost-work/ledger.db"
+gateway_config = "~/TrueCost/evaluation/configs/h100.toml"
+out = "~/truecost-work/grids/retail-gov"
+python = "~/TrueCost/.venv/bin/python"
+port = 30020
+
+[workload]
+kind = "tau2"
+workload_name = "tau2-retail"
+domain = "retail"
+split = "test"
+concurrency = 8
+max_steps = 60
+python = "~/truecost-work/venv-tau2/bin/python"
+dir = "~/truecost-work/tau2-bench"
+data_dir = "~/truecost-work/tau2-bench/data"
+
+[[cells]]
+name = "gov-a5"
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+governor = { mode = "cascade", alpha = 0.05, gate = "~/TrueCost/evaluation/gates/retail.json" }
+
+[[cells]]
+name = "gov-a10"
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+governor = { mode = "cascade", alpha = 0.10, gate = "~/TrueCost/evaluation/gates/retail.json" }
+
+[[cells]]
+name = "gov-a20"
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+governor = { mode = "cascade", alpha = 0.20, gate = "~/TrueCost/evaluation/gates/retail.json" }
+
+[[cells]]
+name = "gov-a2"
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+governor = { mode = "cascade", alpha = 0.02, gate = "~/TrueCost/evaluation/gates/retail.json" }
+
+# The governor at α = 20% plus the pre-write policy check (the safety checker's own rules).
+[[cells]]
+name = "gov-policy-a20"
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+governor = { mode = "cascade", alpha = 0.20, gate = "~/TrueCost/evaluation/gates/retail.json", policy = "retail" }
+
+# The governor + policy check with the gate off (threshold 0): every non-write step on the 9B; writes pinned to the
+# 27B and policy-checked. Isolates what the gate adds beyond pins and the policy check.
+[[cells]]
+name = "gov-policy-a100"
+seeds = [303, 304, 305, 306, 307, 308, 309, 310]
+governor = { mode = "cascade", alpha = 1.0, threshold = 0.0, gate = "~/TrueCost/evaluation/gates/retail.json", policy = "retail" }

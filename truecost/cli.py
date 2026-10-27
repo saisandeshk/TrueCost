@@ -5,6 +5,7 @@
   truecost import-autobench export.json --run R
   truecost crashtest grids/retail.toml [--only baseline mask]
   truecost report R [R ...] [--baseline B] [--json]
+  truecost demo [--download-only]
   truecost prices
 """
 
@@ -147,6 +148,39 @@ def cmd_console(a):
 
     dbs = a.ledger or [a.db]
     uvicorn.run(create_console(dbs, a.gates), host=a.host, port=a.port, log_level="warning", access_log=False)
+
+
+RESULTS_URL = "https://github.com/saisandeshk/TrueCost/releases/download/v0.1.0/truecost-results.db.xz"
+
+
+def cmd_demo(a):
+    """Download the published results ledger (every evaluation run) once, then open the console on it."""
+    import lzma
+    from pathlib import Path
+
+    import httpx
+
+    dest = Path(a.path).expanduser()
+    if a.refresh or not dest.exists():
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        tmp = dest.with_name(dest.name + ".part")
+        print(f"downloading the results ledger from {RESULTS_URL} (about 30 MB) ...", file=sys.stderr)
+        unxz = lzma.LZMADecompressor()
+        with httpx.stream("GET", RESULTS_URL, follow_redirects=True, timeout=120) as r, open(tmp, "wb") as f:
+            r.raise_for_status()
+            for chunk in r.iter_bytes():
+                f.write(unxz.decompress(chunk))
+        tmp.replace(dest)
+        print(f"saved {dest}", file=sys.stderr)
+    if a.download_only:
+        print(dest)
+        return
+    import uvicorn
+
+    from .console import create_console
+
+    print(f"TrueCost console on the published results: http://{a.host}:{a.port}", file=sys.stderr)
+    uvicorn.run(create_console([str(dest)], None), host=a.host, port=a.port, log_level="warning", access_log=False)
 
 
 def cmd_calibrate(a):
@@ -292,6 +326,14 @@ def main(argv=None):
     s.add_argument("--port", type=int, default=8686)
     s.add_argument("--gates", help="directory of calibrated gate files (default: <first ledger dir>/gates)")
     s.set_defaults(fn=cmd_console)
+
+    s = sub.add_parser("demo", help="open the console on the published results (downloads them once)")
+    s.add_argument("--path", default="~/.truecost/results.db")
+    s.add_argument("--download-only", action="store_true")
+    s.add_argument("--refresh", action="store_true", help="download again")
+    s.add_argument("--host", default="127.0.0.1")
+    s.add_argument("--port", type=int, default=8686)
+    s.set_defaults(fn=cmd_demo)
 
     s = sub.add_parser("calibrate", help="fit the governor gate and conformal thresholds from twin files")
     s.add_argument("rest", nargs=argparse.REMAINDER)
