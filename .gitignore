@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+*.db
+*.db-wal
+*.db-shm
+!results/demo.db
+.pytest_cache/
+.claude/settings.local.json
+.claude/commands/truecost.md
+integrations/nat/.venv/
+integrations/nat/output/
