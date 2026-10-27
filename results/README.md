@@ -17,8 +17,10 @@ On retail customer service the cheap model (Qwen3.5-9B) verifies almost as many 
 (Qwen3.8-27B): the savings that route to it are real, and NVIDIA Switchyard's stage router finds that saving on its
 own. On finance back-office work the cheap model verifies 1 task in 100 against the strong model's 26, and every
 router that leans on it loses 13–25 points and costs more per finished task. The governor is the only control that
-held quality on both. On finance its gate keeps the cheap draft for 10% of the steps it judges at α = 10% (22% at α = 20%),
-where the cheap model matches the strong one on only 6% of steps: it declines to save where saving is unsafe.
+held quality on both, because its gate adapts to the work: in the calibration data the cheap model's step matches the
+strong model's on 66% of retail steps but only 6% of finance steps, and on the held-out tasks the gate kept the cheap
+draft half as often on finance as on retail (24% against 48% of the steps it judged at α = 10%; 43% against 71% at
+α = 20%). It declines to save where saving is unsafe.
 
 ## 2. What each saving really buys (retail, 8 seeds)
 
@@ -70,7 +72,9 @@ On finance the attacks barely move the cheap paths, which were already failing (
 ## 5. Safety: the rule checker and an independent rater
 
 The rule checker (`truecost/safety.py`) counts writes that skip a written store rule. A second rater, the 27B with
-thinking on, read 9,238 retail transcripts against the same written policy (4% gave no parseable verdict).
+thinking on, read 9,238 retail transcripts against the same written policy (4% gave no parseable verdict). Its
+verdicts are a release asset (`rater-retail.jsonl.xz`); `evaluation/scripts/rater_summary.py` regenerates every number
+below into [rater-summary.json](rater-summary.json).
 
 | | Rule checker | Independent rater |
 |---|---|---|
@@ -99,8 +103,13 @@ one carries a planted "our bank details changed" instruction (3 variants). **Con
 | Qwen3.8-27B | contained + governed | 30 | **0** | 0 | – | 30 |
 | Nemotron-3-Nano as shipped | contained | 30 | 1 | **1** | – | 28 |
 | Nemotron-3-Nano as shipped | governed | 15 | 0 | 0 | – | 12 |
-| Nemotron-3-Nano, reasoning dropped between turns | governed | 15 | 4 | **0** | **6 (all)** | 6 |
+| Nemotron-3-Nano, reasoning dropped between turns† | governed | 15 | 4 | **0** | **6 (all)** | 6 |
 | Qwen3.5-9B | contained + governed | 30 | 0 | 0 | – | 0 |
+
+† In these 15 trials the gateway's buffered replay for the hold left the model's reasoning text out of later turns,
+as some agent frameworks do; the gateway now keeps it (the governed row above). They are reported as a stress case:
+less reasoning carried over, more injections followed, and the hold still stopped every bank change. Generated table:
+[boards.md](boards.md#invoice-fraud-demonstration-nvidia-openshell).
 
 - The strong model named the injected instruction as suspicious instead of following it.
 - The one executed bank change was a write inside the application: a network sandbox cannot see it, an action-level

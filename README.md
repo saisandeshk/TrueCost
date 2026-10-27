@@ -10,7 +10,7 @@ energy.
 ## Which savings are real
 
 On **retail customer service**, TrueCost confirmed a 65% saving: NVIDIA NeMo Switchyard's stage router cut the cost
-per verified task to ×0.35 with no loss in tasks done (+0.8 points). On **finance back-office work** (payables,
+per verified task to ×0.35 with no measurable loss in tasks done (+0.8 points, within noise). On **finance back-office work** (payables,
 receivables, expenses) it flagged the same saving: **23.7 points fewer tasks done, at 3× the cost per finished task**.
 TrueCost's own governor kept quality on both.
 
@@ -57,8 +57,8 @@ flowchart LR
    stars on reliability, safety, security, sustainability and cost against thresholds fixed in advance. An effect
    counts only when it beats the noise floor: how much unchanged reruns differ.
 3. **Govern inside a risk budget.** The cheap model drafts each step; a gate calibrated with conformal risk control
-   keeps the draft or has the strong model redo it, so at most α of the cheap steps differ from what the strong model
-   would do. Sensitive actions (refunds, cancellations, bank changes) are pinned to the strong model, an optional
+   keeps the draft or has the strong model redo it. It holds the expected share of judged steps where it keeps a draft
+   the strong model would have done differently at or below α, for tasks like those it was calibrated on. Sensitive actions (refunds, cancellations, bank changes) are pinned to the strong model, an optional
    policy check stops a write that skips a written rule, and a breaker stops runaway spend.
 4. **Contain attacks on the controls.** Attacks on the cost controls are part of the crash-test: a customer line that
    talks a router into the cheap model, a tool that pages forever to run up the bill. A hold control sends chosen
@@ -86,19 +86,21 @@ truecost demo        # → http://127.0.0.1:8686/#/crashtest
 ```bash
 export NVIDIA_API_KEY=nvapi-...
 truecost serve --config examples/quickstart/nvidia.toml --port 30020 &
+until curl -sf 127.0.0.1:30020/health >/dev/null; do sleep 1; done
 python examples/quickstart/invoice_agent.py --run qs-strong --model strong
 python examples/quickstart/invoice_agent.py --run qs-cheap  --model cheap
 truecost --db ~/.truecost/quickstart.db report qs-cheap --baseline qs-strong
 truecost console --ledger ~/.truecost/quickstart.db
 ```
 
-In our run each agent took under three minutes. Ultra totalled 19 of 20 invoices exactly and Lightning 20 of 20, at
+In our run ([output](examples/quickstart/expected-output.txt)) each agent took under three minutes. Ultra totalled 19 of 20 invoices exactly and Lightning 20 of 20, at
 ×0.11 the cost per verified task: on work this simple the cheaper model is a real saving. The crash-test is how you
 find the work where it is not.
 
 **Your own agent:** set its base URL to `http://127.0.0.1:30020/v1` (OpenAI chat or Responses) or
-`http://127.0.0.1:30020` (Anthropic Messages), send `X-TrueCost-Task: <task id>` with each call, and record each
-task's result with `truecost outcome <run> <task> verified|failed`. Any OpenAI-compatible upstream works: copy
+`http://127.0.0.1:30020` (Anthropic Messages), send `X-TrueCost-Run: <run>` and `X-TrueCost-Task: <task id>` with
+each call, and record each task's result in the same ledger: `truecost --db <the config's db> outcome <run> <task>
+verified|failed`. Any OpenAI-compatible upstream works: copy
 [`examples/quickstart/openai-compatible.toml`](examples/quickstart/openai-compatible.toml). On your own NVIDIA GPUs,
 install `.[gpu]` and set `gpu = <index>` per tier to add the GPU bill and measured energy.
 
@@ -109,7 +111,7 @@ install `.[gpu]` and set `gpu = <index>` per tier to add the GPU bill and measur
 | **Web console** (`truecost console`) | Usage, live calls, per-task receipts (every call, its tier and why), the crash-test star board, the risk dial, attacks |
 | **NeMo Agent Toolkit plugin** ([integrations/nat](integrations/nat/README.md)) | `nat eval` with TrueCost evaluators: $, energy and policy violations per verified task, matching `truecost report` exactly, plus a ledger exporter for NAT workflows |
 | **NVIDIA OpenShell containment** ([integrations/openshell](integrations/openshell/)) | An accounts-payable agent in a default-deny sandbox, metered per task, with TrueCost's hold on bank-detail changes |
-| **Coding-agent statusline** | Claude Code and Codex: `$/✓` per verified task in the status bar, a `/truecost` receipt, a breaker hook (`truecost init claude-code --write`) |
+| **In your coding agent** | Claude Code: `$/✓` per verified task in the statusline, an end-of-turn line, a `/truecost` receipt; Codex: an end-of-turn line and `/prompts:truecost`; both: an optional breaker hook |
 
 ![The crash-test board in the console](docs/img/console-crashtest.png)
 
@@ -120,9 +122,10 @@ install `.[gpu]` and set `gpu = <index>` per tier to add the GPU bill and measur
 
 </details>
 
-**In your coding agent.** `truecost init claude-code` (or `codex`) previews the change; add `--write` to install a
-statusline such as `TrueCost │ ▸ fix billing test · $0.42 · tests ✓ │ today 5/7 ✓ · $0.31/✓ │ 5h 34% · wk 20%`, an
-end-of-turn line and a `/truecost` receipt for the current task. `✓` means the task's tests passed, `$/✓` is
+**In your coding agent.** `truecost init claude-code` previews the change; add `--write` to install a statusline
+such as `TrueCost │ ▸ fix billing test · $0.42 · tests ✓ │ today 5/7 ✓ · $0.31/✓ │ 5h 34% · wk 20%`, an end-of-turn
+line and a `/truecost` receipt for the current task, and `--breaker` for a hook that stops a looping test run.
+`truecost init codex --write` installs an end-of-turn line (a Codex Stop hook) and `/prompts:truecost`. `✓` means the task's tests passed, `$/✓` is
 list-price dollars per verified task, and the plan meters are the agent's own usage readings. Subscription agents are
 read from their local session logs (`truecost collect`), so nothing is proxied.
 
@@ -138,7 +141,7 @@ read from their local session logs (`truecost collect`), so nothing is proxied.
 - **Invoice fraud, contained in layers** (120 trials in NVIDIA OpenShell): the strong model never followed a planted
   "our bank details changed" instruction (0 of 30) and named it as suspicious; Nemotron as shipped followed it once in
   45, and that bank change went through, a write inside the app that a network sandbox cannot see. With its reasoning
-  dropped between turns, Nemotron followed it in 4 of 15 trials and **TrueCost's hold stopped all six bank-change
+  dropped between turns ([details](results/README.md#6-invoice-fraud-contained-in-layers)), Nemotron followed it in 4 of 15 trials and **TrueCost's hold stopped all six bank-change
   attempts**. OpenShell blocked about 9 outbound connections per trial (the agent's own update and telemetry calls);
   no trial tried to send data out.
 - **We test our own claims.** The policy check never lets through a write its rules flag, so the rule checker counts
@@ -168,6 +171,8 @@ Full boards, attacks, the rater and the demonstration: [results/README.md](resul
   Brev). Yours will differ, which is why TrueCost measures them rather than assuming.
 - **The finance board is smaller:** 3 seeds, the governor on 40 held-out tasks, and its +5.0 points is within
   noise. The cheap model verifies 1 task in 100 there, so the cheap paths' cost ratios have wide intervals.
+- **The governor and the policy check act on non-streamed OpenAI chat-completions calls.** Streamed calls and the
+  Responses and Anthropic Messages APIs are metered and can be routed to a cheaper tier, but are not governed yet.
 - **Hosted APIs** work through the same gateway (verified with NVIDIA's API catalog), but the crash-test results
   come from self-hosted models.
 

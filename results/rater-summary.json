@@ -1,0 +1,111 @@
+{
+ "agreement": {
+  "tasks": 9238,
+  "rater_failed": 365,
+  "writes": 11106,
+  "any_consequential": {
+   "kappa": 0.4522439362481015,
+   "agree": 10384,
+   "checker_only": 149,
+   "rater_only": 573
+  },
+  "auth_first": {
+   "kappa": 0.9898963188491043,
+   "checker": 152,
+   "rater": 149
+  },
+  "confirm_first": {
+   "kappa": 0.3317354769047787,
+   "checker": 332,
+   "rater": 683
+  },
+  "other_user": {
+   "kappa": 0.0,
+   "checker": 0,
+   "rater": 2
+  },
+  "status_first": {
+   "kappa": 0.27729755615559815,
+   "checker": 22,
+   "rater": 121
+  },
+  "cancel_reason": {
+   "kappa": 1.0,
+   "checker": 0,
+   "rater": 0
+  }
+ },
+ "held_out_tasks": 40,
+ "held_out_violation_share": {
+  "baseline": {
+   "tasks": 312,
+   "checker_pct": 3.2,
+   "rater_pct": 6.4
+  },
+  "downgrade": {
+   "tasks": 317,
+   "checker_pct": 1.3,
+   "rater_pct": 5.7
+  },
+  "gov-a10": {
+   "tasks": 317,
+   "checker_pct": 1.9,
+   "rater_pct": 9.1
+  },
+  "gov-a20": {
+   "tasks": 310,
+   "checker_pct": 0.6,
+   "rater_pct": 5.8
+  },
+  "gov-a5": {
+   "tasks": 310,
+   "checker_pct": 5.8,
+   "rater_pct": 4.8
+  },
+  "gov-policy-a100": {
+   "tasks": 318,
+   "checker_pct": 0.0,
+   "rater_pct": 4.1
+  },
+  "gov-policy-a20": {
+   "tasks": 311,
+   "checker_pct": 0.0,
+   "rater_pct": 7.4
+  },
+  "mask": {
+   "tasks": 276,
+   "checker_pct": 7.6,
+   "rater_pct": 8.3
+  },
+  "nemotron": {
+   "tasks": 295,
+   "checker_pct": 8.8,
+   "rater_pct": 14.9
+  },
+  "nemotron-think": {
+   "tasks": 113,
+   "checker_pct": 7.1,
+   "rater_pct": 12.4
+  },
+  "router": {
+   "tasks": 316,
+   "checker_pct": 3.2,
+   "rater_pct": 5.1
+  },
+  "sy-escalation": {
+   "tasks": 314,
+   "checker_pct": 2.9,
+   "rater_pct": 6.7
+  },
+  "sy-escalation-j27": {
+   "tasks": 316,
+   "checker_pct": 1.9,
+   "rater_pct": 6.6
+  },
+  "sy-stage": {
+   "tasks": 313,
+   "checker_pct": 1.3,
+   "rater_pct": 6.7
+  }
+ }
+}

@@ -32,21 +32,33 @@ SEEDS="321 322 323" bash evaluation/run_boards.sh finance  # the finance board (
 Spread seeds over several hosts, then merge their ledgers and draw the boards:
 
 ```bash
+source .venv/bin/activate && uv pip install -e '.[plots]'      # matplotlib for the figures
 python evaluation/scripts/merge_ledgers.py ~/.truecost/results.db host1/ledger.db host2/ledger.db
-truecost board tau2-retail --ledger ~/.truecost/results.db       # the star board as markdown
+python evaluation/scripts/boards.py ~/.truecost/results.db > results/boards.md   # every board, attacks, the demo
 python evaluation/scripts/figures.py ~/.truecost/results.db      # results/figures/retail-*.png + retail-numbers.json
 python evaluation/scripts/regimes.py ~/.truecost/results.db      # results/figures/regimes.png
+python evaluation/scripts/rater_summary.py rater-retail.jsonl > results/rater-summary.json   # rater numbers
 ```
 
-To check our numbers without a GPU, fetch the published ledger (`truecost demo --download-only`) and run the last
-three commands on it: they redraw every figure and table in `results/` from the raw call records.
+To check our numbers without a GPU, fetch the published ledger (`truecost demo --download-only`) and the rater's
+verdicts (`rater-retail.jsonl.xz`, same release), and run the last four commands: they redraw the boards, figures and
+rater numbers in `results/` from the raw records.
 
 ## Invoice-fraud demonstration
 
+The published matrix: 3 injection variants × 5 trials × both arms for the 27B and the 9B (tiers layout `h100`), and
+for Nemotron as shipped (layout `h100-nemotron`), plus 5 more contained Nemotron trials per variant:
+
 ```bash
-MODELS="strong cheap nemotron-think" ARMS="contained governed" TRIALS=5 \
-  SHIELD_URL=http://127.0.0.1:8000 bash integrations/openshell/run_ap_demo.sh
+MODELS="strong cheap" TRIALS=5 SHIELD_URL=http://127.0.0.1:8000 bash integrations/openshell/run_ap_demo.sh
+bash evaluation/serving/tiers.sh up h100-nemotron
+MODELS=nemotron-think TRIALS=5 SHIELD_URL=http://127.0.0.1:8000 bash integrations/openshell/run_ap_demo.sh
+MODELS=nemotron-think ARMS=contained TRIALS=5 PREFIX=ap-more SHIELD_URL=http://127.0.0.1:8000 bash integrations/openshell/run_ap_demo.sh
+bash evaluation/serving/tiers.sh up h100
 ```
+
+The 15 reasoning-dropped trials in the results (`nemotron-think-nr`) are not reproduced by the current gateway, which
+keeps the reasoning; see results/README.md.
 
 `SHIELD_URL` points at a running [Infosys Responsible AI Toolkit](https://github.com/Infosys/Infosys-Responsible-AI-Toolkit)
 moderation service; leave it unset to run without the shield.

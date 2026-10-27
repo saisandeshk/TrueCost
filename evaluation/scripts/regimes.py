@@ -19,7 +19,7 @@ from truecost.console import Console  # noqa: E402
 
 DB = str(Path(sys.argv[1] if len(sys.argv) > 1 else "~/.truecost/results.db").expanduser())
 OUT = ROOT / "results" / "figures"
-BLUE, ORANGE = "#2a78d6", "#eb6834"  # palette slots 1-2 (validated: dataviz skill)
+BLUE, ORANGE = "#2a78d6", "#eb6834"  # a colour-blind-safe pair
 INK, INK2, MUTED, GRID = "#0b0b0b", "#52514e", "#8a8984", "#e6e5e0"
 ROWS = [("downgrade", "Downgrade to the 9B"), ("sy-stage", "NVIDIA Switchyard · stage router"),
         ("router", "von router"), ("sy-escalation", "NVIDIA Switchyard · escalation router"),

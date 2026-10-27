@@ -21,7 +21,7 @@ DB = str(Path(sys.argv[1] if len(sys.argv) > 1 else "~/.truecost/results.db").ex
 OUT = ROOT / "results" / "figures"
 OUT.mkdir(parents=True, exist_ok=True)
 
-# reference palette (dataviz skill), first three categorical slots: validated for all-pairs use
+# a colour-blind-safe categorical palette (first three slots)
 BLUE, ORANGE, AQUA = "#2a78d6", "#eb6834", "#1baf7a"
 INK, INK2, MUTED, GRID = "#0b0b0b", "#52514e", "#8a8984", "#e6e5e0"
 GROUP = {"TrueCost governor": BLUE, "NVIDIA (Switchyard, Nemotron)": ORANGE, "Other cost tricks": AQUA}

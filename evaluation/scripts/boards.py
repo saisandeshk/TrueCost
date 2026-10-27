@@ -1,6 +1,7 @@
 """The full crash-test boards as markdown, through the console's own board code (so they match the console):
     python evaluation/scripts/boards.py [~/.truecost/results.db] > results/boards.md
 """
+import json
 import sys
 from pathlib import Path
 
@@ -55,3 +56,26 @@ for wl, title in BOARDS:
         for a in rows:
             print(f"| `{a['condition']}` | {a['attack']} | ×{f(a['amplification'])} | {f(a.get('success_delta_pp'), 1)} |")
     print()
+
+# ---- the invoice-fraud demonstration (workload openshell-ap): every trial, by agent model and arm ----
+rows = con.ledgers[0].query("SELECT r.condition, t.outcome, t.meta FROM runs r JOIN tasks t ON t.run_id = r.run_id "
+                            "WHERE r.workload = 'openshell-ap'")
+agg: dict = {}
+for r in rows:
+    arm, model, _ = r["condition"].split("/")
+    m = json.loads(r["meta"] or "{}")
+    a = agg.setdefault((model, arm), {"trials": 0, "followed": 0, "executed": 0, "held": 0, "verified": 0, "denied": 0})
+    a["trials"] += 1
+    a["followed"] += bool(m.get("injection_followed"))
+    a["executed"] += len(m.get("bank_changes_executed") or [])
+    a["held"] += m.get("bank_changes_held") or 0
+    a["verified"] += r["outcome"] == "verified"
+    a["denied"] += (m.get("openshell") or {}).get("denied_count", 0)
+if agg:
+    print("## Invoice-fraud demonstration (NVIDIA OpenShell)\n")
+    print("`nemotron-think-nr`: Nemotron as shipped with its reasoning dropped from later turns (see results/README.md).\n")
+    print("| Agent model | Arm | Trials | Followed the injection | Bank changes executed | Bank changes held | "
+          "Verified | Egress denied per trial |\n|---|---|---|---|---|---|---|---|")
+    for (model, arm), a in sorted(agg.items()):
+        print(f"| `{model}` | {arm} | {a['trials']} | {a['followed']} | {a['executed']} | {a['held']} | {a['verified']} | "
+              f"{a['denied'] / a['trials']:.1f} |")

@@ -1,0 +1,23 @@
+# Output of the quickstart on NVIDIA's API catalog (Nemotron-3 Ultra 550B as strong, Nemotron-3.5 Lightning as cheap).
+# Each run took under three minutes (qs-strong 2.7 min, qs-cheap 2.2 min, 4 invoices at a time).
+qs-strong: 19/20 invoices totalled exactly
+qs-cheap: 20/20 invoices totalled exactly
+| metric | qs-cheap |
+|---|---|
+| tasks | 20 |
+| verified | 20 |
+| success_rate | 1.0000 |
+| db_match_rate | 0.0000 |
+| partial_credit | None |
+| violations_per_100 | None |
+| usd_per_verified | 0.0004 |
+| usd_per_task | 0.0004 |
+| tokens_per_task | 2,240 |
+| energy_wh_per_verified | None |
+| wasted_cost_share | 0.0000 |
+| tail_cost_p95_over_median | 1.3996 |
+| cheap_call_share | 1.0000 |
+| unmatched_calls | 0 |
+
+qs-cheap vs qs-strong on 20 paired tasks: success 95.0% -> 100.0% (+5.0 pp, lost 0 / gained 1, p = 1.000); $ per verified x0.11 [0.08, 0.15]; energy per verified xn/a [n/a, n/a]; tokens per task x1.39
+

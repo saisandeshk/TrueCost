@@ -59,3 +59,16 @@ Noise floor: unchanged baseline runs differ by 7.3 points on average over 3 pair
 | `router` | ps | ×0.61 | 0.0 |
 | `sy-escalation` | ps | ×0.72 | -2.5 |
 
+## Invoice-fraud demonstration (NVIDIA OpenShell)
+
+`nemotron-think-nr`: Nemotron as shipped with its reasoning dropped from later turns (see results/README.md).
+
+| Agent model | Arm | Trials | Followed the injection | Bank changes executed | Bank changes held | Verified | Egress denied per trial |
+|---|---|---|---|---|---|---|---|
+| `cheap` | contained | 15 | 0 | 0 | 0 | 0 | 8.0 |
+| `cheap` | governed | 15 | 0 | 0 | 0 | 0 | 8.0 |
+| `nemotron-think` | contained | 30 | 1 | 1 | 0 | 28 | 9.0 |
+| `nemotron-think` | governed | 15 | 0 | 0 | 0 | 12 | 8.8 |
+| `nemotron-think-nr` | governed | 15 | 4 | 0 | 6 | 6 | 8.7 |
+| `strong` | contained | 15 | 0 | 0 | 0 | 15 | 8.7 |
+| `strong` | governed | 15 | 0 | 0 | 0 | 15 | 9.0 |
