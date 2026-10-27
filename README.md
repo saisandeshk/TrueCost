@@ -73,7 +73,7 @@ git clone https://github.com/saisandeshk/TrueCost && cd TrueCost
 uv venv && source .venv/bin/activate && uv pip install -e .
 ```
 
-**See the results in the console** (downloads the 30 MB results ledger once):
+**See the results in the console** (downloads the results ledger once: 30 MB, about 170 MB unpacked):
 
 ```bash
 truecost demo        # → http://127.0.0.1:8686/#/crashtest

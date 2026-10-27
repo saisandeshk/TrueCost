@@ -9,8 +9,10 @@ from __future__ import annotations
 
 import json
 import re
+import threading
 import time
 from collections import defaultdict
+from contextlib import asynccontextmanager
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -41,6 +43,38 @@ class Console:
     def __init__(self, dbs: list[str]):
         self.ledgers = [Ledger(p) for p in dbs]
         self.replay: dict[str, Any] | None = None
+        self._memo: dict[tuple, tuple[tuple, Any]] = {}
+        self._memo_lock = threading.Lock()
+
+    def _version(self) -> tuple:
+        """Changes whenever any ledger file is written (WAL writes touch the -wal file)."""
+        out = []
+        for led in self.ledgers:
+            for p in (led.path, led.path.with_name(led.path.name + "-wal")):
+                st = p.stat() if p.exists() else None
+                out.append((st.st_mtime_ns, st.st_size) if st else None)
+        return tuple(out)
+
+    def cached(self, key: tuple, compute) -> Any:
+        """The board's bootstrap statistics take seconds; reuse them until a ledger changes."""
+        with self._memo_lock:  # a request for a board being warmed waits for it instead of computing it twice
+            version = self._version()
+            hit = self._memo.get(key)
+            if hit and hit[0] == version:
+                return hit[1]
+            value = compute()
+            self._memo[key] = (version, value)
+            return value
+
+    def warm(self) -> None:
+        """Compute every board the web pages ask for, so the first visit doesn't wait for the statistics."""
+        for w in self.workloads():
+            if "baseline" not in w["conditions"]:
+                continue
+            wl = w["workload"]
+            self.cached(("crashtest", wl, None, None), lambda: self.crashtest(wl))
+            self.cached(("crashtest", wl, None, "gov"), lambda: self.crashtest(wl, None, "gov"))
+            self.cached(("attacks", wl), lambda: self.attacks(wl))
 
     def q(self, sql: str, args: tuple | list = ()) -> list[dict[str, Any]]:
         out = []
@@ -368,7 +402,13 @@ class ScrubbedJSON(JSONResponse):
 def create_console(dbs: list[str], gates_dir: str | None = None) -> FastAPI:
     con = Console(dbs)
     gates = Path(gates_dir).expanduser() if gates_dir else Path(dbs[0]).expanduser().parent / "gates"
-    app = FastAPI(title="TrueCost console", default_response_class=ScrubbedJSON)
+
+    @asynccontextmanager
+    async def lifespan(app: FastAPI):
+        threading.Thread(target=con.warm, name="truecost-warm", daemon=True).start()
+        yield
+
+    app = FastAPI(title="TrueCost console", default_response_class=ScrubbedJSON, lifespan=lifespan)
 
     @app.get("/api/overview")
     def overview(range: str = "7d", source: str = "all"):
@@ -405,7 +445,7 @@ def create_console(dbs: list[str], gates_dir: str | None = None) -> FastAPI:
 
     @app.get("/api/crashtest")
     def crashtest(workload: str, baseline: str | None = None, subset: str | None = None):
-        return con.crashtest(workload, baseline, subset)
+        return con.cached(("crashtest", workload, baseline, subset), lambda: con.crashtest(workload, baseline, subset))
 
     @app.get("/api/batching")
     def batching(workload: str, gpu: int = 0):
@@ -417,7 +457,7 @@ def create_console(dbs: list[str], gates_dir: str | None = None) -> FastAPI:
 
     @app.get("/api/attacks")
     def attacks(workload: str):
-        return con.attacks(workload)
+        return con.cached(("attacks", workload), lambda: con.attacks(workload))
 
     @app.get("/api/gate")
     def gate(name: str = "retail"):

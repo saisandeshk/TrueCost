@@ -39,3 +39,37 @@ def test_outcome_command_marks_tasks(tmp_path):
     cli.main(["--db", db, "outcome", "r1", "t2", "failed"])
     rows = {r["task_key"]: r["outcome"] for r in Ledger(db).query("SELECT task_key, outcome FROM tasks")}
     assert rows == {"r1/t1": "verified", "r1/t2": "failed"}
+
+
+def test_board_cached_until_the_ledger_changes(tmp_path):
+    from truecost.console import Console
+    from truecost.ledger import Ledger
+
+    db = str(tmp_path / "l.db")
+    led = Ledger(db)
+    con = Console([db])
+    calls = []
+
+    def compute():
+        calls.append(1)
+        return len(calls)
+
+    assert con.cached(("k",), compute) == 1
+    assert con.cached(("k",), compute) == 1  # unchanged ledger: reused
+    led.upsert_run({"run_id": "r1", "workload": "tau2-retail", "condition": "baseline"})
+    assert con.cached(("k",), compute) == 2  # a write recomputes
+
+
+def test_warm_fills_the_boards_the_pages_ask_for(cfg, upstream, tmp_path):
+    from truecost.console import Console
+
+    _, led = make_client(cfg, upstream)
+    led.upsert_run({"run_id": "r1", "workload": "tau2-retail", "condition": "baseline"})
+    p = tmp_path / "res.json"
+    p.write_text(json.dumps({"simulations": [{"task_id": "1", "trial": 0, "reward_info": {"reward": 1}, "messages": []}]}))
+    import_tau2(led, str(p), "r1", "tau2-retail")
+    con = Console([cfg.db])
+    con.warm()
+    assert {k for k in con._memo} == {("crashtest", "tau2-retail", None, None),
+                                      ("crashtest", "tau2-retail", None, "gov"), ("attacks", "tau2-retail")}
+    assert con.cached(("crashtest", "tau2-retail", None, None), lambda: 1 / 0)["baseline"] == "baseline"  # served warm
