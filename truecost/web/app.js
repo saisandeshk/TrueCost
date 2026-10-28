@@ -10,8 +10,9 @@ let timer = null;
 
 const api = async (p) => { const r = await fetch(p); if (!r.ok) throw new Error(`${r.status} ${p}`); return r.json(); };
 const SOURCES = { all: "All usage", claude_code: "Claude Code", codex: "Codex", gateway: "Agent fleet (gateway)",
-  crashtest: "Crash-test runs" };
+  crashtest: "Crash-test runs", everything: "Everything (usage + crash-tests)" };
 const RANGES = [["today", "Today"], ["7d", "7 days"], ["30d", "30 days"], ["all", "All"]];
+const SOURCE_LABEL = { ...SOURCES, all: "All", claude: "Claude Code (benchmark runs)", codex: "Codex", gateway: "Agent fleet (gateway)" };
 
 // ---- formatting ---------------------------------------------------------------------------------
 const usd = (v) => v == null ? "–" : v >= 100 ? `$${v.toFixed(0)}` : v >= 1 ? `$${v.toFixed(2)}` : v >= 0.01 ? `$${v.toFixed(3)}` : v > 0 ? `$${v.toFixed(4)}` : "$0";
@@ -89,12 +90,22 @@ async function overview() {
   const srcRows = Object.entries(d.by_source);
   const bySource = h("table", { class: "t" }, h("thead", {}, h("tr", {}, h("th", {}, "Source"), h("th", { class: "n" }, "Tasks"),
     h("th", { class: "n" }, "Verified"), h("th", { class: "n" }, "Spend"), h("th", { class: "n" }, "$ / verified"))),
-    h("tbody", {}, srcRows.map(([k, v]) => h("tr", {}, h("td", {}, SOURCES[k] || k), h("td", { class: "n" }, v.tasks),
+    h("tbody", {}, srcRows.map(([k, v]) => h("tr", {}, h("td", {}, SOURCE_LABEL[k] || k), h("td", { class: "n" }, v.tasks),
       h("td", { class: "n" }, v.verified), h("td", { class: "n" }, usd(v.usd)), h("td", { class: "n" }, v.verified ? usd(v.usd / v.verified) : "–")))));
+  const models = await api(`/api/models?range=${state.range}&source=${state.source}`).catch(() => []);
+  const modelTable = h("table", { class: "t" }, h("thead", {}, h("tr", {}, ["Model", "Runs on", "Calls", "Tasks", "Verified",
+    "Tokens", "Spend (list price)", "Measured energy"].map((x, i) => h("th", { class: i > 1 ? "n" : "" }, x)))),
+    h("tbody", {}, models.map((m) => h("tr", {}, h("td", {}, m.model), h("td", {}, h("span", { class: "chip" }, m.where)),
+      h("td", { class: "n" }, num(m.calls)), h("td", { class: "n" }, num(m.tasks)),
+      h("td", { class: "n" }, m.verified + m.failed ? pct(m.verified / (m.verified + m.failed)) : "–"),
+      h("td", { class: "n" }, num(m.tokens)), h("td", { class: "n" }, usd(m.usd)),
+      h("td", { class: "n" }, m.energy_wh == null ? h("span", { class: "muted" }, "not on our GPU") : wh(m.energy_wh))))));
   main.replaceChildren(filters(), hero, h("div", { class: "row two" },
     card("Spend by day", "API-equivalent $, split by how the task ended", days),
     h("div", {}, card("Usage limits", "Subscription windows, as the agents last reported them", meters),
-      card("By source", null, srcRows.length ? bySource : h("div", { class: "muted small" }, "No tasks in this range.")))));
+      card("By source", null, srcRows.length ? bySource : h("div", { class: "muted small" }, "No tasks in this range.")))),
+    card("Models", "Every model behind these tasks: self-hosted on a GPU (energy measured), a hosted API, or a subscription coding agent read from its own logs. Verified = share of its graded tasks that passed.",
+      models.length ? modelTable : h("div", { class: "muted small" }, "No model calls in this range.")));
   stackedColumns(days, {
     data: d.days.map((x) => ({ x: x.day, label: x.day.slice(5), parts: x })),
     series: [{ key: "verified", label: "Verified", color: "--s1" }, { key: "failed", label: "Failed", color: "--s2" },
@@ -417,4 +428,9 @@ const savedTheme = store.get("theme", "auto");
 if (savedTheme !== "auto") document.documentElement.dataset.theme = savedTheme;
 document.querySelector("button.theme").textContent = `Theme: ${savedTheme}`;
 addEventListener("hashchange", route);
-route();
+// A console started with defaults (e.g. `truecost demo`) seeds a first visit's filters; a viewer's own choice wins.
+api("/api/defaults").catch(() => ({})).then((d) => {
+  if (d.range && store.get("range", null) == null) state.range = d.range;
+  if (d.source && store.get("source", null) == null) state.source = d.source;
+  route();
+});

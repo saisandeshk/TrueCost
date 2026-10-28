@@ -73,3 +73,27 @@ def test_warm_fills_the_boards_the_pages_ask_for(cfg, upstream, tmp_path):
     assert {k for k in con._memo} == {("crashtest", "tau2-retail", None, None),
                                       ("crashtest", "tau2-retail", None, "gov"), ("attacks", "tau2-retail")}
     assert con.cached(("crashtest", "tau2-retail", None, None), lambda: 1 / 0)["baseline"] == "baseline"  # served warm
+
+
+def test_models_view_says_where_each_model_ran(tmp_path):
+    import time
+
+    from truecost.ledger import Ledger
+
+    db = str(tmp_path / "m.db")
+    led = Ledger(db)
+    now = time.time()
+    rows = [("gw", "gateway", "qwen3.8-27b", "strong", 0, 3.6, "verified"),          # self-hosted: GPU and energy
+            ("api", "gateway", "nvidia/nemotron-3-ultra", "strong", None, None, "failed"),  # hosted API: neither
+            ("cc", "claude_code", "claude-sonnet-5-5", None, None, None, "verified")]   # a subscription agent's log
+    for i, (run, src, model, tier, gpu, j, outcome) in enumerate(rows):
+        led.upsert_task({"task_key": f"{run}/t", "run_id": run, "source": src, "outcome": outcome, "started": now})
+        led.add_call({"call_id": str(i), "ts_start": now, "source": src, "run_id": run, "task_key": f"{run}/t",
+                      "role": "agent", "tier": tier, "model": model, "gpu": gpu, "energy_j": j, "cost_usd": 0.01,
+                      "input_tokens": 10, "output_tokens": 5})
+    con = TestClient(create_console([db], defaults={"range": "all", "source": "everything"}))
+    where = {m["model"]: (m["where"], m["verified"], m["energy_wh"]) for m in
+             con.get("/api/models?range=all&source=everything").json()}
+    assert where == {"qwen3.8-27b": ("Self-hosted GPU", 1, 0.001), "nvidia/nemotron-3-ultra": ("Hosted API", 0, None),
+                     "claude-sonnet-5-5": ("Claude Code", 1, None)}
+    assert con.get("/api/defaults").json() == {"range": "all", "source": "everything"}

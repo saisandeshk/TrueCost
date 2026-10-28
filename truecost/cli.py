@@ -180,10 +180,12 @@ def cmd_demo(a):
 
     from .console import create_console
 
-    print(f"TrueCost console on the published results: http://{a.host}:{a.port}/#/crashtest", file=sys.stderr)
+    print(f"TrueCost console on the published results: http://{a.host}:{a.port}\n"
+          f"  every model, self-hosted, hosted API, Claude Code and Codex: http://{a.host}:{a.port}/#/overview\n"
+          f"  the crash-test boards: http://{a.host}:{a.port}/#/crashtest", file=sys.stderr)
     gates = Path(__file__).resolve().parents[1] / "evaluation" / "gates"  # the frozen gates, in a repository checkout
-    uvicorn.run(create_console([str(dest)], str(gates) if gates.is_dir() else None), host=a.host, port=a.port,
-                log_level="warning", access_log=False)
+    app = create_console([str(dest)], str(gates) if gates.is_dir() else None, {"range": "all", "source": "everything"})
+    uvicorn.run(app, host=a.host, port=a.port, log_level="warning", access_log=False)
 
 
 def cmd_outcome(a):

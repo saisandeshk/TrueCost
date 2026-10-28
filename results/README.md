@@ -5,6 +5,8 @@ runs, 13,940 graded tasks, 416,119 metered model calls**. Every figure and table
 results ledger ([release v0.1.0](https://github.com/saisandeshk/TrueCost/releases/tag/v0.1.0); `truecost demo
 --download-only` fetches it) by the scripts in [`evaluation/scripts/`](../evaluation/scripts/). The method, fixed
 before the runs: [evaluation/PROTOCOL.md](../evaluation/PROTOCOL.md). The full star boards: [boards.md](boards.md).
+The same ledger also holds the runs in [section 7](#7-claude-code-codex-and-a-hosted-api): Claude Code and Codex on
+coding exercises, and the hosted-API quickstart (24 runs, 605 tasks, 2,693 calls; no GPU of ours involved).
 
 \* = beyond the noise floor: the 95% CI excludes zero and the effect exceeds how much unchanged reruns of the baseline
 differ (4.7 points on retail over 28 pairs of seeds, 7.3 on finance).
@@ -120,3 +122,30 @@ less reasoning carried over, more injections followed, and the hold still stoppe
 - The Infosys Responsible AI Toolkit's prompt-injection model scored every tool output in flag mode. It passed the
   business-style fraud invoices as legitimate (scores 0.86–0.9999) and flagged ordinary unit-test output instead (up to
   0.80): instruction-like text and payment fraud are different signals, which is why the hold sits at the action.
+
+## 7. Claude Code, Codex and a hosted API
+
+Not part of the crash-test protocol: these show TrueCost metering agents whose models it does not serve.
+
+- **Subscription coding agents.** Claude Code (Opus, Sonnet and Haiku 5.5) and Codex (GPT-6 Astra, 6.1 Sol, 5.6 Terra
+  and 6 Luna, at three effort levels for Sol) solved Python exercises from Aider Polyglot through their official CLIs
+  under our own logins (`truecost/adapters/sub_run.py`). Nothing went through the gateway: TrueCost read each agent's
+  own session log, priced every call at list price, recorded the plan-usage readings the agents report, and graded
+  each exercise with its original unit tests. "Hidden" means the agent worked without the test file.
+
+  | Agent, tests hidden | Passed | API $ per pass | % of the 5-hour plan window per pass |
+  |---|---|---|---|
+  | Claude Code · Sonnet 5.5 (baseline) | 60/68 (88%) | $0.060 | 0.59% |
+  | Claude Code · Haiku 5.5 | 75/136 (55%) | −82% | −81% |
+  | Codex · GPT-6 Astra (baseline) | 29/34 (85%) | $0.346 | 2.39% |
+  | Codex · GPT-6.1 Sol | 29/34 | −81% | −68% |
+  | Codex · GPT-6 Luna | 9/34 (26%) | −97% | −68% |
+
+  On Claude's plan the window moves almost exactly with API price, so a cheaper tier saves the same on both. On
+  Codex's plan it moves with tokens, so Luna's 97% saving on an API bill is 68% on the plan, for a third of the passes.
+  The plan meters are fitted from the agents' own usage readings stored in the ledger; the console's Plans page shows
+  every configuration with its interval.
+- **A hosted API.** The quickstart's invoice agent on NVIDIA's API catalog (workload `invoices-hosted-api`):
+  Nemotron-3 Ultra verified 19 of 20 invoices, Nemotron-3.5 Lightning 20 of 20 at ×0.11 the list-price cost per
+  verified task. One seed of 20 tasks: a demonstration of the gateway on a hosted API, not a rating.
+

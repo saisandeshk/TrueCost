@@ -76,8 +76,11 @@ uv venv && source .venv/bin/activate && uv pip install -e .
 **See the results in the console** (downloads the results ledger once: 30 MB, about 170 MB unpacked):
 
 ```bash
-truecost demo        # → http://127.0.0.1:8686/#/crashtest
+truecost demo        # → http://127.0.0.1:8686: every model and run; #/crashtest for the star boards
 ```
+
+The demo holds the self-hosted crash-tests, the hosted-API runs on NVIDIA's API catalog, and Claude Code and Codex
+on public coding exercises, side by side ([below](#claude-code-codex-and-hosted-apis)).
 
 **Meter an agent on a hosted API in five minutes** (NVIDIA's API catalog; a free key from
 [build.nvidia.com](https://build.nvidia.com)). The example agent totals 20 supplier invoices on Nemotron-3 Ultra
@@ -108,7 +111,7 @@ install `.[gpu]` and set `gpu = <index>` per tier to add the GPU bill and measur
 
 | Surface | What it shows |
 |---|---|
-| **Web console** (`truecost console`) | Usage, live calls, per-task receipts (every call, its tier and why), the crash-test star board, the risk dial, attacks |
+| **Web console** (`truecost console`) | Usage and every model (self-hosted, hosted API, Claude Code, Codex), live calls, per-task receipts (every call, its tier and why), the crash-test star board, the risk dial, attacks, subscription plans |
 | **NeMo Agent Toolkit plugin** ([integrations/nat](integrations/nat/README.md)) | `nat eval` with TrueCost evaluators: $, energy and policy violations per verified task, matching `truecost report` exactly, plus a ledger exporter for NAT workflows |
 | **NVIDIA OpenShell containment** ([integrations/openshell](integrations/openshell/)) | An accounts-payable agent in a default-deny sandbox, metered per task, with TrueCost's hold on bank-detail changes |
 | **In your coding agent** | Claude Code: `$/✓` per verified task in the statusline, an end-of-turn line, a `/truecost` receipt; Codex: an end-of-turn line and `/prompts:truecost`; both: an optional breaker hook |
@@ -122,7 +125,29 @@ install `.[gpu]` and set `gpu = <index>` per tier to add the GPU bill and measur
 
 </details>
 
-**In your coding agent.** `truecost init claude-code` previews the change; add `--write` to install a statusline
+### Claude Code, Codex and hosted APIs
+
+The console puts every model behind your agents in one table: self-hosted on a GPU (with measured energy), a hosted
+API through the gateway, or a subscription coding agent read from its own session logs.
+
+![Every model in one table: Claude Code, Codex, hosted Nemotron, self-hosted Qwen and Nemotron](docs/img/console-models.png)
+
+In the demo data, Claude Code (Opus, Sonnet and Haiku 5.5) and Codex (GPT-6 Astra, 6.1 Sol, 5.6 Terra and 6 Luna) solve
+public Aider Polyglot exercises through their official CLIs, graded by each exercise's own unit tests. With the tests
+hidden from the agent, cheaper is not free:
+- **Claude Code:** Haiku passes 55% of exercises against Sonnet's 88%, at 82% less API spend per passed exercise and
+  81% less of the subscription's 5-hour window: Claude's plan meters close to API price.
+- **Codex:** Luna is 97% cheaper per passed exercise on an API bill but only 68% cheaper on the plan, and passes 9 of
+  34 against Astra's 29: Codex's plan meters tokens, not the price list, so the bill and the plan rank tiers differently.
+
+![What one passed exercise costs on the API bill and on the plan](docs/img/console-plans.png)
+
+**In your coding agent.** The statusline and `/truecost` receipt below are live output from the Claude Code session
+that built this repository.
+
+![TrueCost in Claude Code: a task receipt and the statusline](docs/img/claude-code.png)
+
+`truecost init claude-code` previews the change; add `--write` to install a statusline
 such as `TrueCost │ ▸ fix billing test · $0.42 · tests ✓ │ today 5/7 ✓ · $0.31/✓ · 12% wasted │ 5h 34% · wk 20%`, an end-of-turn
 line and a `/truecost` receipt for the current task, and `--breaker` for a hook that stops a looping test run.
 `truecost init codex --write` installs an end-of-turn line (a Codex Stop hook) and `/prompts:truecost`. `✓` means the task's tests passed, `$/✓` is

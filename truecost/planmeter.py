@@ -63,7 +63,13 @@ def readings(led: Ledger, source: str, window: str) -> list[tuple[float, float, 
                  led.query("SELECT meta FROM tasks WHERE source=? AND meta LIKE '%limits_after%'", (source,))]
         if any(m.get("shared_account") for m in metas):
             metas = [m for m in metas if not m.get("shared_account")]
-        return _codex_readings(sorted({Path(m["log"]) for m in metas if m.get("log")}), window)
+        logs = sorted({Path(m["log"]) for m in metas if m.get("log") and Path(m["log"]).exists()})
+        if logs:
+            return _codex_readings(logs, window)
+        # no session logs on this machine (e.g. a published ledger): the readings the collector stored in the ledger
+        return sorted((float(r["ts"]), float(r["used_pct"]), f"codex:{round(float(r['resets_at']) / 60) * 60}", "codex")
+                      for r in led.query("SELECT ts, used_pct, resets_at FROM limits WHERE source='codex' AND window=?",
+                                         (window,)) if r["resets_at"])
     first = {r["task_key"]: (r["ts"], r["acct"]) for r in led.query(
         """SELECT task_key, MIN(ts_start) ts, MAX(json_extract(meta,'$.account')) acct FROM calls WHERE source=?
            GROUP BY task_key""", (CALL_SOURCE.get(source, source),))}

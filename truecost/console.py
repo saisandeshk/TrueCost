@@ -92,6 +92,8 @@ class Console:
     def _scope(self, source: str) -> tuple[str, list]:
         """Usage views exclude crash-test experiments (runs with a condition) unless asked for them."""
         exp = "t.run_id IN (SELECT run_id FROM runs WHERE condition IS NOT NULL)"
+        if source == "everything":
+            return "", []
         if source == "crashtest":
             return f" AND {exp}", []
         sql = f" AND NOT {exp}"
@@ -104,7 +106,7 @@ class Console:
         src_sql, extra = self._scope(source)
         args = [since, *extra]
         marks = ",".join("?" for _ in AGENT_SIDE)
-        rows = self.q(f"""SELECT t.task_key, t.source, t.outcome, t.started, t.violations,
+        rows = self.q(f"""SELECT t.task_key, t.source, t.outcome, COALESCE(t.started, MIN(c.ts_start)) started, t.violations,
                                  SUM(COALESCE(c.cost_usd,0)) usd, SUM(COALESCE(c.energy_j,0)) j,
                                  SUM(COALESCE(c.input_tokens,0)+COALESCE(c.cache_read_tokens,0)
                                      +COALESCE(c.cache_write_tokens,0)+COALESCE(c.output_tokens,0)) tok,
@@ -120,7 +122,9 @@ class Console:
         unv = [r for r in rows if r["outcome"] == UNVERIFIED]
         days: dict[str, dict[str, float]] = defaultdict(lambda: {"verified": 0.0, "failed": 0.0, "unverified": 0.0})
         for r in rows:
-            d = datetime.fromtimestamp(r["started"] or 0).strftime("%Y-%m-%d")
+            if not r["started"]:
+                continue  # an imported task with no time on it or its calls: counted above, not placed on a day
+            d = datetime.fromtimestamp(r["started"]).strftime("%Y-%m-%d")
             days[d][r["outcome"] if r["outcome"] in (VERIFIED, FAILED, UNVERIFIED) else "unverified"] += r["usd"]
         by_source: dict[str, dict[str, float]] = defaultdict(lambda: {"tasks": 0, "verified": 0, "usd": 0.0})
         for r in rows:
@@ -145,6 +149,31 @@ class Console:
             "by_source": by_source, "limits": self.limits(), "prices": pricing.snapshot_date(),
             "co2_factor": GRID_G_CO2_PER_WH,
         }
+
+    def models(self, rng: str, source: str) -> list[dict[str, Any]]:
+        """Every model the agents used: where it ran, its calls, the tasks it worked on and how they ended, tokens,
+        list-price spend and measured energy (agent-side calls only, as everywhere else)."""
+        src_sql, extra = self._scope(source)
+        marks = ",".join("?" for _ in AGENT_SIDE)
+        rows = self.q(f"""SELECT c.model, c.source,
+                                 CASE WHEN c.tier LIKE 'sy%' AND c.gpu IS NULL THEN 'router'
+                                      WHEN c.gpu IS NOT NULL OR c.energy_j IS NOT NULL THEN 'gpu' ELSE 'api' END kind,
+                                 COUNT(*) calls, COUNT(DISTINCT c.task_key) tasks,
+                                 COUNT(DISTINCT CASE WHEN t.outcome='verified' THEN c.task_key END) verified,
+                                 COUNT(DISTINCT CASE WHEN t.outcome='failed' THEN c.task_key END) failed,
+                                 SUM(COALESCE(c.input_tokens,0)+COALESCE(c.cache_read_tokens,0)
+                                     +COALESCE(c.cache_write_tokens,0)+COALESCE(c.output_tokens,0)) tokens,
+                                 SUM(c.cost_usd) usd, SUM(c.energy_j) j
+                          FROM calls c JOIN tasks t ON t.task_key=c.task_key
+                          WHERE (c.role IS NULL OR c.role IN ({marks},'subagent')) AND COALESCE(t.started,0) >= ?{src_sql}
+                          GROUP BY 1, 2, 3""", [*AGENT_SIDE, _since(rng), *extra])
+        where = {"gpu": "Self-hosted GPU", "api": "Hosted API", "router": "NVIDIA Switchyard route"}
+        out = [{"model": r["model"], "source": r["source"],
+                "where": {"claude_code": "Claude Code", "codex": "Codex"}.get(r["source"]) or where[r["kind"]],
+                "calls": r["calls"], "tasks": r["tasks"], "verified": r["verified"], "failed": r["failed"],
+                "tokens": r["tokens"], "usd": r["usd"], "energy_wh": r["j"] / 3600.0 if r["j"] else None}
+               for r in rows if r["model"]]
+        return sorted(out, key=lambda r: (r["where"], -(r["usd"] or 0)))
 
     def limits(self) -> list[dict[str, Any]]:
         latest: dict[tuple[str, str], dict] = {}
@@ -398,7 +427,8 @@ class ScrubbedJSON(JSONResponse):
         return super().render(_scrub(content))
 
 
-def create_console(dbs: list[str], gates_dir: str | None = None) -> FastAPI:
+def create_console(dbs: list[str], gates_dir: str | None = None, defaults: dict | None = None) -> FastAPI:
+    """`defaults` seeds a first visit's filters (e.g. the demo shows every run, all time)."""
     con = Console(dbs)
     gates = Path(gates_dir).expanduser() if gates_dir else Path(dbs[0]).expanduser().parent / "gates"
 
@@ -412,6 +442,14 @@ def create_console(dbs: list[str], gates_dir: str | None = None) -> FastAPI:
     @app.get("/api/overview")
     def overview(range: str = "7d", source: str = "all"):
         return con.overview(range, source)
+
+    @app.get("/api/models")
+    def models(range: str = "7d", source: str = "all"):
+        return con.models(range, source)
+
+    @app.get("/api/defaults")
+    def ui_defaults():
+        return defaults or {}
 
     @app.get("/api/tasks")
     def tasks(range: str = "7d", source: str = "all", run: str | None = None, limit: int = 200):
