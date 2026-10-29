@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TrueCost console</title>
+  <link rel="stylesheet" href="static/style.css">
+  <style>
+  .snapshot { background: var(--wash); border-bottom: 1px solid var(--grid); color: var(--ink-2); font-size: 13px;
+              padding: 8px 24px; line-height: 1.5; }
+  .snapshot a { color: var(--s1); }
+  @media (max-width: 720px) {
+    header.top { flex-wrap: wrap; gap: 10px 16px; padding: 12px 16px; position: static; }
+    .snapshot { padding: 8px 16px; }
+    main { padding: 16px 16px 48px; }
+  }
+</style>
+  <meta name="description" content="TrueCost: cost per task done, not per token. A read-only snapshot of the console on the published results.">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">TrueCost<span>cost per verified outcome</span></div>
+    <nav>
+      <a href="#/overview" data-page="overview">Overview</a>
+      <a href="#/live" data-page="live">Live</a>
+      <a href="#/tasks" data-page="tasks">Tasks</a>
+      <a href="#/crashtest" data-page="crashtest">Crash-test</a>
+      <a href="#/dial" data-page="dial">Risk dial</a>
+      <a href="#/attacks" data-page="attacks">Attacks</a>
+      <a href="#/plans" data-page="plans">Plans</a>
+    </nav>
+    <div class="spacer"></div>
+    <button class="theme" type="button">Theme: auto</button>
+  </header>
+  <div class="snapshot">Read-only snapshot of the TrueCost console on the published evaluation results: 333 runs, 14,545 tasks, 418,812 model calls, on self-hosted NVIDIA H100s, hosted APIs, Claude Code and Codex. <b>Live</b> replays a logged run. To meter your own agents: <a href="https://github.com/saisandeshk/TrueCost">github.com/saisandeshk/TrueCost</a></div>
+  <main></main>
+  <script>window.TRUECOST_SNAPSHOT = {"replay_default": "retail-gov-a10-s303", "replay_speed": 2, "runs": 333, "tasks": 14545, "calls": 418812};</script>
+  <script src="static/snapshot.js"></script>
+  <script type="module" src="static/app.js"></script>
+</body>
+</html>
